@@ -166,7 +166,7 @@
   - **Property 4: Email confirmation delivery**
   - **Validates: Requirements 2.4**
 
-- [ ] 14. Build Admissions page with enrollment information
+- [x] 14. Build Admissions page with enrollment information
   - Create Admissions page layout
   - Add admission requirements section
   - Create fee structure table
