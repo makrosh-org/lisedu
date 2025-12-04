@@ -7,7 +7,7 @@
   - Configure database connection and verify functionality
   - _Requirements: 8.1_
 
-- [x] 2. Install and configure theme and essential plugins
+- [-] 2. Install and configure theme and essential plugins
   - Install Hello Elementor or Astra theme as base theme
   - Install and activate Elementor Pro
   - Install form plugin (Contact Form 7 or WPForms)
