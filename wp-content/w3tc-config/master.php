@@ -185,6 +185,7 @@
         "wp-locations.php"
     ],
     "pgcache.accept.qs": [
+        "ScCid",
         "_branch_match_id",
         "_bta_c",
         "_bta_tid",
@@ -264,9 +265,7 @@
         "redirect_mongo_id",
         "ref",
         "s_kwcid",
-        "s_kwcid",
         "sb_referer_host",
-        "ScCid",
         "si",
         "sscid",
         "tblci",
@@ -287,7 +286,7 @@
         "utm_term",
         "wbraid"
     ],
-    "pgcache.migrated.qsexempts": 0,
+    "pgcache.migrated.qsexempts": 1764881594,
     "pgcache.late_init": false,
     "pgcache.late_caching": false,
     "pgcache.mirrors.enabled": false,
