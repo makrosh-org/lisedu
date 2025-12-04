@@ -184,7 +184,7 @@
   - Create event archive template
   - _Requirements: 10.1, 10.2, 10.5_
 
-- [ ] 16. Build Events page with calendar functionality
+- [x] 16. Build Events page with calendar functionality
   - Design Events page layout
   - Display events in chronological order
   - Implement visual highlighting for events within next 7 days
