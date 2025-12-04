@@ -107,7 +107,7 @@
   - Ensure responsive grid layout
   - _Requirements: 1.3_
 
-- [ ] 10. Build Facilities page with images and descriptions
+- [x] 10. Build Facilities page with images and descriptions
   - Create Facilities page layout
   - Add image galleries for classrooms, playgrounds, libraries
   - Write descriptions for each facility type
