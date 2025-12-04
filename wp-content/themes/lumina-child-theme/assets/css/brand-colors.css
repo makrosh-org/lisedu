@@ -1,0 +1,183 @@
+/**
+ * Lumina International School Brand Colors
+ * 
+ * This file defines the official brand color palette for Lumina International School.
+ * These CSS variables should be used consistently across all pages and components.
+ * 
+ * @package Lumina_Child_Theme
+ * @version 1.0.0
+ */
+
+:root {
+    /* Primary Brand Colors */
+    --base-darkblue: #003d70;
+    --base-lightgray: #f7f7f7;
+    --base-accent-teal: #7EBEC5;
+    --base-accent-orange: #F39A3B;
+    --base-white: #FFFFFF;
+    
+    /* Semantic Color Mappings */
+    --color-primary: var(--base-darkblue);
+    --color-secondary: var(--base-accent-teal);
+    --color-accent: var(--base-accent-orange);
+    --color-background: var(--base-lightgray);
+    --color-text: var(--base-darkblue);
+    --color-text-light: #666666;
+    --color-white: var(--base-white);
+    
+    /* Button Colors */
+    --button-primary-bg: var(--base-darkblue);
+    --button-primary-text: var(--base-white);
+    --button-primary-hover: #002a4f;
+    --button-secondary-bg: var(--base-accent-orange);
+    --button-secondary-text: var(--base-white);
+    --button-secondary-hover: #d88530;
+    
+    /* Link Colors */
+    --link-color: var(--base-darkblue);
+    --link-hover: var(--base-accent-teal);
+    
+    /* Border Colors */
+    --border-color: #e0e0e0;
+    --border-color-light: #f0f0f0;
+    
+    /* Shadow Colors */
+    --shadow-light: rgba(0, 61, 112, 0.1);
+    --shadow-medium: rgba(0, 61, 112, 0.2);
+    --shadow-dark: rgba(0, 61, 112, 0.3);
+}
+
+/* Apply brand colors to common elements */
+body {
+    color: var(--color-text);
+    background-color: var(--color-background);
+}
+
+a {
+    color: var(--link-color);
+}
+
+a:hover,
+a:focus {
+    color: var(--link-hover);
+}
+
+/* Primary buttons */
+.button,
+.btn,
+.wp-block-button__link,
+button[type="submit"],
+input[type="submit"] {
+    background-color: var(--button-primary-bg);
+    color: var(--button-primary-text);
+    border: none;
+    padding: 12px 30px;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+.button:hover,
+.btn:hover,
+.wp-block-button__link:hover,
+button[type="submit"]:hover,
+input[type="submit"]:hover {
+    background-color: var(--button-primary-hover);
+    color: var(--button-primary-text);
+}
+
+/* Secondary buttons */
+.button-secondary,
+.btn-secondary {
+    background-color: var(--button-secondary-bg);
+    color: var(--button-secondary-text);
+}
+
+.button-secondary:hover,
+.btn-secondary:hover {
+    background-color: var(--button-secondary-hover);
+    color: var(--button-secondary-text);
+}
+
+/* Headings */
+h1, h2, h3, h4, h5, h6 {
+    color: var(--color-primary);
+}
+
+/* Navigation */
+.site-header,
+.main-navigation {
+    background-color: var(--base-white);
+    border-bottom: 2px solid var(--base-accent-teal);
+}
+
+/* Footer */
+.site-footer {
+    background-color: var(--base-darkblue);
+    color: var(--base-white);
+}
+
+.site-footer a {
+    color: var(--base-white);
+}
+
+.site-footer a:hover {
+    color: var(--base-accent-teal);
+}
+
+/* Accent sections */
+.accent-section {
+    background-color: var(--base-accent-teal);
+    color: var(--base-white);
+}
+
+.accent-section-orange {
+    background-color: var(--base-accent-orange);
+    color: var(--base-white);
+}
+
+/* Cards and boxes */
+.card,
+.box {
+    background-color: var(--base-white);
+    border: 1px solid var(--border-color);
+    box-shadow: 0 2px 8px var(--shadow-light);
+}
+
+/* Forms */
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+input[type="number"],
+input[type="date"],
+textarea,
+select {
+    border: 1px solid var(--border-color);
+    padding: 10px;
+    border-radius: 4px;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="tel"]:focus,
+input[type="number"]:focus,
+input[type="date"]:focus,
+textarea:focus,
+select:focus {
+    border-color: var(--base-accent-teal);
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(126, 190, 197, 0.2);
+}
+
+/* Error states */
+.error,
+.form-error {
+    color: #d32f2f;
+    border-color: #d32f2f;
+}
+
+/* Success states */
+.success,
+.form-success {
+    color: #388e3c;
+    border-color: #388e3c;
+}

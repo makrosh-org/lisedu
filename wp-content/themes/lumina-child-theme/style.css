@@ -1,0 +1,17 @@
+/*
+Theme Name: Lumina International School Child Theme
+Theme URI: https://luminaschool.com
+Description: Custom child theme for Lumina International School with brand styling
+Author: Lumina International School
+Author URI: https://luminaschool.com
+Template: twentytwentyfour
+Version: 1.0.0
+License: GNU General Public License v2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
+Text Domain: lumina-child-theme
+*/
+
+/* Import brand colors */
+@import url('assets/css/brand-colors.css');
+
+/* Additional custom styles will be added here */
