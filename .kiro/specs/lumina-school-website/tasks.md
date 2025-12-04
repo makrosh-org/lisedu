@@ -147,7 +147,7 @@
   - Ensure responsive design
   - _Requirements: 5.1, 5.2_
 
-- [ ] 13. Create and configure admission inquiry form
+- [x] 13. Create and configure admission inquiry form
   - Build admission form with all required fields (parent name, email, phone, student name, age, grade level, start date, comments)
   - Implement client-side validation
   - Add CAPTCHA

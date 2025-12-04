@@ -37,11 +37,19 @@ function lumina_child_enqueue_styles() {
         '1.0.0'
     );
     
+    // Enqueue admission form CSS
+    wp_enqueue_style(
+        'lumina-admission-form',
+        get_stylesheet_directory_uri() . '/assets/css/admission-form.css',
+        array($parent_style, 'lumina-brand-colors'),
+        '1.0.0'
+    );
+    
     // Enqueue child theme stylesheet
     wp_enqueue_style(
         'lumina-child-style',
         get_stylesheet_directory_uri() . '/style.css',
-        array($parent_style, 'lumina-brand-colors', 'lumina-contact-form'),
+        array($parent_style, 'lumina-brand-colors', 'lumina-contact-form', 'lumina-admission-form'),
         wp_get_theme()->get('Version')
     );
     
