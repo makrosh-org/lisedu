@@ -115,7 +115,7 @@
   - Add lightbox functionality for images
   - _Requirements: 1.4_
 
-- [ ] 11. Create and configure contact form
+- [-] 11. Create and configure contact form
   - Build contact form with required fields (name, email, phone, subject, message)
   - Implement client-side validation for email format and required fields
   - Add CAPTCHA for spam protection
