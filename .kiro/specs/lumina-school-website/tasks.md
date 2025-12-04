@@ -176,7 +176,7 @@
   - Include "Apply Now" CTA buttons
   - _Requirements: 2.1, 2.2_
 
-- [ ] 15. Create custom post type for Events
+- [x] 15. Create custom post type for Events
   - Register 'lis_event' custom post type
   - Add custom fields for event date, time, location, end date
   - Create event category taxonomy (Academic, Sports, Cultural, Holidays, Parent Events)
