@@ -732,6 +732,222 @@ function lumina_recent_news_shortcode($atts) {
 add_shortcode('lumina_recent_news', 'lumina_recent_news_shortcode');
 
 /**
+ * Register Custom Post Type: Programs
+ * Requirements: 1.3 - Display detailed information for each grade level
+ * 
+ * This custom post type handles program information for each grade level
+ * from play group to grade 5, including curriculum highlights and age ranges.
+ */
+function lumina_register_programs_post_type() {
+    $labels = array(
+        'name'                  => _x('Programs', 'Post Type General Name', 'lumina-child-theme'),
+        'singular_name'         => _x('Program', 'Post Type Singular Name', 'lumina-child-theme'),
+        'menu_name'             => __('Programs', 'lumina-child-theme'),
+        'name_admin_bar'        => __('Program', 'lumina-child-theme'),
+        'archives'              => __('Program Archives', 'lumina-child-theme'),
+        'attributes'            => __('Program Attributes', 'lumina-child-theme'),
+        'parent_item_colon'     => __('Parent Program:', 'lumina-child-theme'),
+        'all_items'             => __('All Programs', 'lumina-child-theme'),
+        'add_new_item'          => __('Add New Program', 'lumina-child-theme'),
+        'add_new'               => __('Add New', 'lumina-child-theme'),
+        'new_item'              => __('New Program', 'lumina-child-theme'),
+        'edit_item'             => __('Edit Program', 'lumina-child-theme'),
+        'update_item'           => __('Update Program', 'lumina-child-theme'),
+        'view_item'             => __('View Program', 'lumina-child-theme'),
+        'view_items'            => __('View Programs', 'lumina-child-theme'),
+        'search_items'          => __('Search Program', 'lumina-child-theme'),
+        'not_found'             => __('Not found', 'lumina-child-theme'),
+        'not_found_in_trash'    => __('Not found in Trash', 'lumina-child-theme'),
+        'featured_image'        => __('Featured Image', 'lumina-child-theme'),
+        'set_featured_image'    => __('Set featured image', 'lumina-child-theme'),
+        'remove_featured_image' => __('Remove featured image', 'lumina-child-theme'),
+        'use_featured_image'    => __('Use as featured image', 'lumina-child-theme'),
+        'insert_into_item'      => __('Insert into program', 'lumina-child-theme'),
+        'uploaded_to_this_item' => __('Uploaded to this program', 'lumina-child-theme'),
+        'items_list'            => __('Programs list', 'lumina-child-theme'),
+        'items_list_navigation' => __('Programs list navigation', 'lumina-child-theme'),
+        'filter_items_list'     => __('Filter programs list', 'lumina-child-theme'),
+    );
+    
+    $args = array(
+        'label'                 => __('Program', 'lumina-child-theme'),
+        'description'           => __('School programs for different grade levels', 'lumina-child-theme'),
+        'labels'                => $labels,
+        'supports'              => array('title', 'editor', 'thumbnail', 'excerpt', 'revisions', 'page-attributes'),
+        'taxonomies'            => array('program_category'),
+        'hierarchical'          => false,
+        'public'                => true,
+        'show_ui'               => true,
+        'show_in_menu'          => true,
+        'menu_position'         => 5,
+        'menu_icon'             => 'dashicons-welcome-learn-more',
+        'show_in_admin_bar'     => true,
+        'show_in_nav_menus'     => true,
+        'can_export'            => true,
+        'has_archive'           => true,
+        'exclude_from_search'   => false,
+        'publicly_queryable'    => true,
+        'capability_type'       => 'post',
+        'show_in_rest'          => true, // Enable Gutenberg editor
+        'rewrite'               => array('slug' => 'programs', 'with_front' => false),
+    );
+    
+    register_post_type('lis_program', $args);
+}
+add_action('init', 'lumina_register_programs_post_type', 0);
+
+/**
+ * Register Program Category Taxonomy
+ * Requirements: 1.3 - Categorize programs (academic/extracurricular)
+ */
+function lumina_register_program_category_taxonomy() {
+    $labels = array(
+        'name'                       => _x('Program Categories', 'Taxonomy General Name', 'lumina-child-theme'),
+        'singular_name'              => _x('Program Category', 'Taxonomy Singular Name', 'lumina-child-theme'),
+        'menu_name'                  => __('Program Categories', 'lumina-child-theme'),
+        'all_items'                  => __('All Categories', 'lumina-child-theme'),
+        'parent_item'                => __('Parent Category', 'lumina-child-theme'),
+        'parent_item_colon'          => __('Parent Category:', 'lumina-child-theme'),
+        'new_item_name'              => __('New Category Name', 'lumina-child-theme'),
+        'add_new_item'               => __('Add New Category', 'lumina-child-theme'),
+        'edit_item'                  => __('Edit Category', 'lumina-child-theme'),
+        'update_item'                => __('Update Category', 'lumina-child-theme'),
+        'view_item'                  => __('View Category', 'lumina-child-theme'),
+        'separate_items_with_commas' => __('Separate categories with commas', 'lumina-child-theme'),
+        'add_or_remove_items'        => __('Add or remove categories', 'lumina-child-theme'),
+        'choose_from_most_used'      => __('Choose from the most used', 'lumina-child-theme'),
+        'popular_items'              => __('Popular Categories', 'lumina-child-theme'),
+        'search_items'               => __('Search Categories', 'lumina-child-theme'),
+        'not_found'                  => __('Not Found', 'lumina-child-theme'),
+        'no_terms'                   => __('No categories', 'lumina-child-theme'),
+        'items_list'                 => __('Categories list', 'lumina-child-theme'),
+        'items_list_navigation'      => __('Categories list navigation', 'lumina-child-theme'),
+    );
+    
+    $args = array(
+        'labels'                     => $labels,
+        'hierarchical'               => true,
+        'public'                     => true,
+        'show_ui'                    => true,
+        'show_admin_column'          => true,
+        'show_in_nav_menus'          => true,
+        'show_tagcloud'              => false,
+        'show_in_rest'               => true,
+        'rewrite'                    => array('slug' => 'program-category'),
+    );
+    
+    register_taxonomy('program_category', array('lis_program'), $args);
+}
+add_action('init', 'lumina_register_program_category_taxonomy', 0);
+
+/**
+ * Add custom meta boxes for Program custom fields
+ * Requirements: 1.3 - Age range and curriculum highlights
+ */
+function lumina_add_program_meta_boxes() {
+    add_meta_box(
+        'lumina_program_details',
+        __('Program Details', 'lumina-child-theme'),
+        'lumina_program_details_callback',
+        'lis_program',
+        'normal',
+        'high'
+    );
+}
+add_action('add_meta_boxes', 'lumina_add_program_meta_boxes');
+
+/**
+ * Meta box callback function for program details
+ */
+function lumina_program_details_callback($post) {
+    // Add nonce for security
+    wp_nonce_field('lumina_program_details_nonce', 'lumina_program_details_nonce_field');
+    
+    // Get existing values
+    $age_range = get_post_meta($post->ID, '_program_age_range', true);
+    $curriculum_highlights = get_post_meta($post->ID, '_program_curriculum_highlights', true);
+    
+    // Display fields
+    ?>
+    <div class="lumina-program-meta-fields">
+        <p>
+            <label for="program_age_range"><strong><?php _e('Age Range:', 'lumina-child-theme'); ?></strong></label><br>
+            <input type="text" id="program_age_range" name="program_age_range" value="<?php echo esc_attr($age_range); ?>" class="widefat" placeholder="e.g., 3-4 years">
+            <span class="description"><?php _e('Enter the age range for this program (e.g., 3-4 years, 5-6 years)', 'lumina-child-theme'); ?></span>
+        </p>
+        
+        <p>
+            <label for="program_curriculum_highlights"><strong><?php _e('Curriculum Highlights:', 'lumina-child-theme'); ?></strong></label><br>
+            <textarea id="program_curriculum_highlights" name="program_curriculum_highlights" rows="8" class="widefat" placeholder="Enter curriculum highlights, one per line"><?php echo esc_textarea($curriculum_highlights); ?></textarea>
+            <span class="description"><?php _e('Enter key curriculum highlights for this program. You can use bullet points or separate items with line breaks.', 'lumina-child-theme'); ?></span>
+        </p>
+    </div>
+    
+    <style>
+        .lumina-program-meta-fields p {
+            margin-bottom: 20px;
+        }
+        .lumina-program-meta-fields label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .lumina-program-meta-fields .description {
+            display: block;
+            margin-top: 5px;
+            font-style: italic;
+            color: #666;
+        }
+    </style>
+    <?php
+}
+
+/**
+ * Save program custom field data
+ */
+function lumina_save_program_meta_data($post_id) {
+    // Check if nonce is set
+    if (!isset($_POST['lumina_program_details_nonce_field'])) {
+        return;
+    }
+    
+    // Verify nonce
+    if (!wp_verify_nonce($_POST['lumina_program_details_nonce_field'], 'lumina_program_details_nonce')) {
+        return;
+    }
+    
+    // Check if this is an autosave
+    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+        return;
+    }
+    
+    // Check user permissions
+    if (!current_user_can('edit_post', $post_id)) {
+        return;
+    }
+    
+    // Save age range
+    if (isset($_POST['program_age_range'])) {
+        update_post_meta($post_id, '_program_age_range', sanitize_text_field($_POST['program_age_range']));
+    }
+    
+    // Save curriculum highlights
+    if (isset($_POST['program_curriculum_highlights'])) {
+        update_post_meta($post_id, '_program_curriculum_highlights', sanitize_textarea_field($_POST['program_curriculum_highlights']));
+    }
+}
+add_action('save_post_lis_program', 'lumina_save_program_meta_data');
+
+/**
+ * Flush rewrite rules on theme activation to ensure custom post type URLs work
+ */
+function lumina_flush_rewrite_rules_on_activation() {
+    lumina_register_programs_post_type();
+    lumina_register_program_category_taxonomy();
+    flush_rewrite_rules();
+}
+register_activation_hook(__FILE__, 'lumina_flush_rewrite_rules_on_activation');
+
+/**
  * Include Elementor configuration
  */
 require_once get_stylesheet_directory() . '/elementor-config.php';

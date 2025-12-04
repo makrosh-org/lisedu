@@ -89,7 +89,7 @@
   - Ensure responsive design at all breakpoints
   - _Requirements: 1.2_
 
-- [ ] 8. Create custom post type for Programs
+- [x] 8. Create custom post type for Programs
   - Register 'lis_program' custom post type
   - Add custom fields for age range and curriculum highlights
   - Create program category taxonomy
