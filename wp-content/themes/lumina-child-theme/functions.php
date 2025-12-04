@@ -111,3 +111,8 @@ function lumina_excerpt_more($more) {
     return '... <a href="' . get_permalink() . '" class="read-more">Read More</a>';
 }
 add_filter('excerpt_more', 'lumina_excerpt_more');
+
+/**
+ * Include Elementor configuration
+ */
+require_once get_stylesheet_directory() . '/elementor-config.php';
