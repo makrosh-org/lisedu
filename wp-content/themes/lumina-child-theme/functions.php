@@ -951,3 +951,386 @@ register_activation_hook(__FILE__, 'lumina_flush_rewrite_rules_on_activation');
  * Include Elementor configuration
  */
 require_once get_stylesheet_directory() . '/elementor-config.php';
+
+/**
+ * Shortcode: Display programs grid with expandable sections
+ * Requirements: 1.3 - Display detailed information for each grade level
+ * Task 9: Build Programs page and populate grade levels
+ * 
+ * Usage: [lumina_programs_grid]
+ */
+function lumina_programs_grid_shortcode() {
+    // Query all programs ordered by menu_order
+    $args = array(
+        'post_type' => 'lis_program',
+        'posts_per_page' => -1,
+        'post_status' => 'publish',
+        'orderby' => 'menu_order',
+        'order' => 'ASC',
+    );
+    
+    $programs_query = new WP_Query($args);
+    
+    ob_start();
+    
+    if ($programs_query->have_posts()) {
+        echo '<div class="lumina-programs-grid">';
+        
+        while ($programs_query->have_posts()) {
+            $programs_query->the_post();
+            $program_id = get_the_ID();
+            $age_range = get_post_meta($program_id, '_program_age_range', true);
+            $curriculum = get_post_meta($program_id, '_program_curriculum_highlights', true);
+            $categories = get_the_terms($program_id, 'program_category');
+            
+            echo '<div class="program-card" data-program-id="' . $program_id . '">';
+            
+            // Program header (always visible)
+            echo '<div class="program-header">';
+            
+            if (has_post_thumbnail()) {
+                echo '<div class="program-image">';
+                the_post_thumbnail('medium', array('alt' => get_the_title()));
+                echo '</div>';
+            }
+            
+            echo '<div class="program-header-content">';
+            echo '<h3 class="program-title">' . get_the_title() . '</h3>';
+            
+            if ($age_range) {
+                echo '<p class="program-age-range"><strong>Age Range:</strong> ' . esc_html($age_range) . '</p>';
+            }
+            
+            if ($categories && !is_wp_error($categories)) {
+                echo '<div class="program-categories">';
+                foreach ($categories as $category) {
+                    echo '<span class="program-category-badge">' . esc_html($category->name) . '</span>';
+                }
+                echo '</div>';
+            }
+            
+            echo '<button class="program-toggle" aria-expanded="false" aria-controls="program-details-' . $program_id . '">';
+            echo '<span class="toggle-text">View Details</span>';
+            echo '<span class="toggle-icon">+</span>';
+            echo '</button>';
+            
+            echo '</div>'; // .program-header-content
+            echo '</div>'; // .program-header
+            
+            // Program details (expandable)
+            echo '<div class="program-details" id="program-details-' . $program_id . '" style="display: none;">';
+            
+            echo '<div class="program-description">';
+            echo '<h4>About This Program</h4>';
+            echo '<div class="program-content">' . wpautop(get_the_content()) . '</div>';
+            echo '</div>';
+            
+            if ($curriculum) {
+                echo '<div class="program-curriculum">';
+                echo '<h4>Curriculum Highlights</h4>';
+                echo '<ul class="curriculum-list">';
+                
+                $highlights = explode("\n", $curriculum);
+                foreach ($highlights as $highlight) {
+                    $highlight = trim($highlight);
+                    if (!empty($highlight)) {
+                        echo '<li>' . esc_html($highlight) . '</li>';
+                    }
+                }
+                
+                echo '</ul>';
+                echo '</div>';
+            }
+            
+            echo '<div class="program-actions">';
+            echo '<a href="' . get_permalink() . '" class="program-link">Learn More</a>';
+            echo '<a href="/admissions" class="program-apply-btn">Apply Now</a>';
+            echo '</div>';
+            
+            echo '</div>'; // .program-details
+            
+            echo '</div>'; // .program-card
+        }
+        
+        echo '</div>'; // .lumina-programs-grid
+        
+        // Add CSS for programs grid
+        echo '<style>
+        .lumina-programs-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+            margin: 30px 0;
+        }
+        
+        .program-card {
+            background: #FFFFFF;
+            border: 2px solid #7EBEC5;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .program-card:hover {
+            box-shadow: 0 8px 20px rgba(0, 61, 112, 0.15);
+        }
+        
+        .program-header {
+            display: flex;
+            flex-direction: column;
+            padding: 0;
+        }
+        
+        .program-image {
+            width: 100%;
+            height: 250px;
+            overflow: hidden;
+        }
+        
+        .program-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .program-header-content {
+            padding: 25px;
+        }
+        
+        .program-title {
+            color: #003d70;
+            font-size: 28px;
+            margin: 0 0 15px 0;
+            font-weight: 700;
+        }
+        
+        .program-age-range {
+            color: #666;
+            font-size: 16px;
+            margin: 10px 0;
+        }
+        
+        .program-categories {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 15px 0;
+        }
+        
+        .program-category-badge {
+            background: #7EBEC5;
+            color: #FFFFFF;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+        
+        .program-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            background: #F39A3B;
+            color: #FFFFFF;
+            border: none;
+            padding: 15px 20px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 8px;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .program-toggle:hover {
+            background: #003d70;
+        }
+        
+        .program-toggle:focus {
+            outline: 2px solid #7EBEC5;
+            outline-offset: 2px;
+        }
+        
+        .toggle-icon {
+            font-size: 24px;
+            font-weight: 700;
+            transition: transform 0.3s ease;
+        }
+        
+        .program-toggle[aria-expanded="true"] .toggle-icon {
+            transform: rotate(45deg);
+        }
+        
+        .program-toggle[aria-expanded="true"] .toggle-text::after {
+            content: " Less";
+        }
+        
+        .program-details {
+            padding: 0 25px 25px 25px;
+            background: #f7f7f7;
+        }
+        
+        .program-details h4 {
+            color: #003d70;
+            font-size: 20px;
+            margin: 20px 0 15px 0;
+            padding-top: 20px;
+            border-top: 2px solid #7EBEC5;
+        }
+        
+        .program-details h4:first-child {
+            border-top: none;
+            padding-top: 20px;
+        }
+        
+        .program-description {
+            margin-bottom: 20px;
+        }
+        
+        .program-content {
+            color: #333;
+            line-height: 1.8;
+        }
+        
+        .program-content p {
+            margin-bottom: 15px;
+        }
+        
+        .program-curriculum {
+            margin-bottom: 20px;
+        }
+        
+        .curriculum-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .curriculum-list li {
+            position: relative;
+            padding-left: 30px;
+            margin-bottom: 12px;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .curriculum-list li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #7EBEC5;
+            font-weight: 700;
+            font-size: 18px;
+        }
+        
+        .program-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 2px solid #FFFFFF;
+        }
+        
+        .program-link,
+        .program-apply-btn {
+            flex: 1;
+            text-align: center;
+            padding: 12px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .program-link {
+            background: #FFFFFF;
+            color: #003d70;
+            border: 2px solid #003d70;
+        }
+        
+        .program-link:hover {
+            background: #003d70;
+            color: #FFFFFF;
+        }
+        
+        .program-apply-btn {
+            background: #F39A3B;
+            color: #FFFFFF;
+            border: 2px solid #F39A3B;
+        }
+        
+        .program-apply-btn:hover {
+            background: #FFFFFF;
+            color: #F39A3B;
+        }
+        
+        /* Responsive design */
+        @media (min-width: 768px) {
+            .program-header {
+                flex-direction: row;
+            }
+            
+            .program-image {
+                width: 300px;
+                height: auto;
+                min-height: 250px;
+            }
+            
+            .program-header-content {
+                flex: 1;
+            }
+        }
+        
+        @media (min-width: 1024px) {
+            .program-image {
+                width: 350px;
+            }
+        }
+        </style>';
+        
+        // Add JavaScript for toggle functionality
+        echo '<script>
+        (function() {
+            document.addEventListener("DOMContentLoaded", function() {
+                const toggleButtons = document.querySelectorAll(".program-toggle");
+                
+                toggleButtons.forEach(function(button) {
+                    button.addEventListener("click", function() {
+                        const isExpanded = this.getAttribute("aria-expanded") === "true";
+                        const detailsId = this.getAttribute("aria-controls");
+                        const details = document.getElementById(detailsId);
+                        
+                        if (isExpanded) {
+                            // Collapse
+                            this.setAttribute("aria-expanded", "false");
+                            details.style.display = "none";
+                            this.querySelector(".toggle-text").textContent = "View Details";
+                        } else {
+                            // Expand
+                            this.setAttribute("aria-expanded", "true");
+                            details.style.display = "block";
+                            this.querySelector(".toggle-text").textContent = "Hide Details";
+                            
+                            // Smooth scroll to the expanded section
+                            setTimeout(function() {
+                                details.scrollIntoView({ behavior: "smooth", block: "nearest" });
+                            }, 100);
+                        }
+                    });
+                });
+            });
+        })();
+        </script>';
+        
+    } else {
+        echo '<div class="lumina-programs-grid">';
+        echo '<p style="text-align: center; color: #666; padding: 60px 20px; background: #f7f7f7; border-radius: 8px;">No programs available at this time. Please check back soon!</p>';
+        echo '</div>';
+    }
+    
+    wp_reset_postdata();
+    
+    return ob_get_clean();
+}
+add_shortcode('lumina_programs_grid', 'lumina_programs_grid_shortcode');
