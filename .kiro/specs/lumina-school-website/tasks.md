@@ -65,7 +65,7 @@
   - **Property 8: Responsive layout adaptation**
   - **Validates: Requirements 3.5**
 
-- [ ] 6. Build homepage with Elementor
+- [x] 6. Build homepage with Elementor
   - Design and implement hero section with school name, tagline, and CTA button
   - Create welcome message section
   - Build featured programs section with 3-column grid

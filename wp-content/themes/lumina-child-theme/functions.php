@@ -453,6 +453,285 @@ function lumina_add_mobile_menu() {
 add_action('wp_footer', 'lumina_add_mobile_menu');
 
 /**
+ * Shortcode: Display upcoming events
+ * Requirements: 10.4 - Display next 3 upcoming events on homepage
+ * 
+ * Usage: [lumina_upcoming_events limit="3"]
+ */
+function lumina_upcoming_events_shortcode($atts) {
+    $atts = shortcode_atts(array(
+        'limit' => 3,
+    ), $atts);
+    
+    // Query for upcoming events (custom post type will be created in task 15)
+    // For now, we'll create a placeholder that can be populated later
+    $args = array(
+        'post_type' => 'lis_event',
+        'posts_per_page' => intval($atts['limit']),
+        'post_status' => 'publish',
+        'meta_key' => 'event_date',
+        'orderby' => 'meta_value',
+        'order' => 'ASC',
+        'meta_query' => array(
+            array(
+                'key' => 'event_date',
+                'value' => date('Y-m-d'),
+                'compare' => '>=',
+                'type' => 'DATE',
+            ),
+        ),
+    );
+    
+    $events_query = new WP_Query($args);
+    
+    ob_start();
+    
+    if ($events_query->have_posts()) {
+        echo '<div class="lumina-upcoming-events">';
+        echo '<div class="events-grid">';
+        
+        while ($events_query->have_posts()) {
+            $events_query->the_post();
+            $event_date = get_post_meta(get_the_ID(), 'event_date', true);
+            $event_time = get_post_meta(get_the_ID(), 'event_time', true);
+            $event_location = get_post_meta(get_the_ID(), 'event_location', true);
+            
+            echo '<div class="event-card">';
+            echo '<h3 class="event-title"><a href="' . get_permalink() . '">' . get_the_title() . '</a></h3>';
+            
+            if ($event_date) {
+                echo '<p class="event-date"><strong>Date:</strong> ' . date('F j, Y', strtotime($event_date)) . '</p>';
+            }
+            
+            if ($event_time) {
+                echo '<p class="event-time"><strong>Time:</strong> ' . esc_html($event_time) . '</p>';
+            }
+            
+            if ($event_location) {
+                echo '<p class="event-location"><strong>Location:</strong> ' . esc_html($event_location) . '</p>';
+            }
+            
+            echo '<div class="event-excerpt">' . get_the_excerpt() . '</div>';
+            echo '<a href="' . get_permalink() . '" class="event-link">Learn More →</a>';
+            echo '</div>';
+        }
+        
+        echo '</div>';
+        echo '</div>';
+        
+        // Add CSS for event cards
+        echo '<style>
+        .lumina-upcoming-events {
+            margin: 30px 0;
+        }
+        .events-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 20px;
+        }
+        .event-card {
+            background: #FFFFFF;
+            border: 2px solid #7EBEC5;
+            border-radius: 8px;
+            padding: 25px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .event-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 61, 112, 0.1);
+        }
+        .event-title {
+            color: #003d70;
+            font-size: 22px;
+            margin-bottom: 15px;
+        }
+        .event-title a {
+            color: #003d70;
+            text-decoration: none;
+        }
+        .event-title a:hover {
+            color: #7EBEC5;
+        }
+        .event-date, .event-time, .event-location {
+            color: #333;
+            margin: 8px 0;
+            font-size: 14px;
+        }
+        .event-excerpt {
+            margin: 15px 0;
+            color: #666;
+            line-height: 1.6;
+        }
+        .event-link {
+            display: inline-block;
+            color: #F39A3B;
+            text-decoration: none;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+        .event-link:hover {
+            color: #003d70;
+        }
+        </style>';
+        
+    } else {
+        echo '<div class="lumina-upcoming-events">';
+        echo '<p style="text-align: center; color: #666; padding: 40px 20px;">No upcoming events at this time. Check back soon!</p>';
+        echo '</div>';
+    }
+    
+    wp_reset_postdata();
+    
+    return ob_get_clean();
+}
+add_shortcode('lumina_upcoming_events', 'lumina_upcoming_events_shortcode');
+
+/**
+ * Shortcode: Display recent news articles
+ * Requirements: 11.4 - Display 3 most recent news articles on homepage
+ * 
+ * Usage: [lumina_recent_news limit="3"]
+ */
+function lumina_recent_news_shortcode($atts) {
+    $atts = shortcode_atts(array(
+        'limit' => 3,
+    ), $atts);
+    
+    // Query for recent posts (news articles)
+    $args = array(
+        'post_type' => 'post',
+        'posts_per_page' => intval($atts['limit']),
+        'post_status' => 'publish',
+        'orderby' => 'date',
+        'order' => 'DESC',
+    );
+    
+    $news_query = new WP_Query($args);
+    
+    ob_start();
+    
+    if ($news_query->have_posts()) {
+        echo '<div class="lumina-recent-news">';
+        echo '<div class="news-grid">';
+        
+        while ($news_query->have_posts()) {
+            $news_query->the_post();
+            
+            echo '<div class="news-card">';
+            
+            // Featured image
+            if (has_post_thumbnail()) {
+                echo '<div class="news-image">';
+                echo '<a href="' . get_permalink() . '">';
+                the_post_thumbnail('lumina-news', array('alt' => get_the_title()));
+                echo '</a>';
+                echo '</div>';
+            }
+            
+            echo '<div class="news-content">';
+            echo '<h3 class="news-title"><a href="' . get_permalink() . '">' . get_the_title() . '</a></h3>';
+            echo '<p class="news-meta">';
+            echo '<span class="news-date">' . get_the_date('F j, Y') . '</span>';
+            echo ' | ';
+            echo '<span class="news-author">By ' . get_the_author() . '</span>';
+            echo '</p>';
+            echo '<div class="news-excerpt">' . get_the_excerpt() . '</div>';
+            echo '<a href="' . get_permalink() . '" class="news-link">Read More →</a>';
+            echo '</div>';
+            
+            echo '</div>';
+        }
+        
+        echo '</div>';
+        echo '</div>';
+        
+        // Add CSS for news cards
+        echo '<style>
+        .lumina-recent-news {
+            margin: 30px 0;
+        }
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 20px;
+        }
+        .news-card {
+            background: #FFFFFF;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .news-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0, 61, 112, 0.15);
+        }
+        .news-image {
+            width: 100%;
+            height: 200px;
+            overflow: hidden;
+        }
+        .news-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        .news-card:hover .news-image img {
+            transform: scale(1.05);
+        }
+        .news-content {
+            padding: 20px;
+        }
+        .news-title {
+            color: #003d70;
+            font-size: 20px;
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+        .news-title a {
+            color: #003d70;
+            text-decoration: none;
+        }
+        .news-title a:hover {
+            color: #7EBEC5;
+        }
+        .news-meta {
+            color: #999;
+            font-size: 13px;
+            margin-bottom: 15px;
+        }
+        .news-excerpt {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+        .news-link {
+            display: inline-block;
+            color: #F39A3B;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .news-link:hover {
+            color: #003d70;
+        }
+        </style>';
+        
+    } else {
+        echo '<div class="lumina-recent-news">';
+        echo '<p style="text-align: center; color: #666; padding: 40px 20px;">No news articles available yet. Stay tuned for updates!</p>';
+        echo '</div>';
+    }
+    
+    wp_reset_postdata();
+    
+    return ob_get_clean();
+}
+add_shortcode('lumina_recent_news', 'lumina_recent_news_shortcode');
+
+/**
  * Include Elementor configuration
  */
 require_once get_stylesheet_directory() . '/elementor-config.php';
