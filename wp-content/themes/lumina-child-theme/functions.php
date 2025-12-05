@@ -2509,3 +2509,274 @@ function lumina_news_grid_shortcode($atts) {
     return ob_get_clean();
 }
 add_shortcode('lumina_news_grid', 'lumina_news_grid_shortcode');
+
+/**
+ * Shortcode: Display resources grid
+ * Requirements: 12.1, 12.2, 12.3, 12.4 - Display resources with filtering
+ * Task 20: Build Resources page with downloadable documents
+ * 
+ * Usage: [lumina_resources_grid]
+ */
+function lumina_resources_grid_shortcode($atts) {
+    $atts = shortcode_atts(array(
+        'category' => '',
+        'limit' => -1,
+    ), $atts);
+    
+    // Build query args
+    $args = array(
+        'post_type' => 'lis_resource',
+        'posts_per_page' => intval($atts['limit']),
+        'post_status' => 'publish',
+        'orderby' => 'title',
+        'order' => 'ASC',
+    );
+    
+    // Add category filter if specified
+    if (!empty($atts['category'])) {
+        $args['tax_query'] = array(
+            array(
+                'taxonomy' => 'resource_category',
+                'field' => 'slug',
+                'terms' => $atts['category'],
+            ),
+        );
+    }
+    
+    $resources_query = new WP_Query($args);
+    
+    ob_start();
+    
+    if ($resources_query->have_posts()) {
+        echo '<div class="lumina-resources-grid-shortcode">';
+        echo '<div class="resources-grid-container">';
+        
+        while ($resources_query->have_posts()) {
+            $resources_query->the_post();
+            
+            $resource_id = get_the_ID();
+            $file_url = get_post_meta($resource_id, '_resource_file_url', true);
+            $file_type = get_post_meta($resource_id, '_resource_file_type', true);
+            $file_size = get_post_meta($resource_id, '_resource_file_size', true);
+            $download_count = get_post_meta($resource_id, '_resource_download_count', true);
+            $access_level = get_post_meta($resource_id, '_resource_access_level', true);
+            $categories = get_the_terms($resource_id, 'resource_category');
+            
+            // Get file icon based on type
+            $file_icon = '📄';
+            if (!empty($file_type)) {
+                switch (strtoupper($file_type)) {
+                    case 'PDF':
+                        $file_icon = '📕';
+                        break;
+                    case 'DOC':
+                    case 'DOCX':
+                        $file_icon = '📘';
+                        break;
+                    case 'XLS':
+                    case 'XLSX':
+                        $file_icon = '📊';
+                        break;
+                }
+            }
+            
+            echo '<div class="resource-grid-card">';
+            echo '<div class="resource-grid-icon">' . $file_icon . '</div>';
+            echo '<div class="resource-grid-content">';
+            echo '<h3 class="resource-grid-title"><a href="' . get_permalink() . '">' . get_the_title() . '</a></h3>';
+            
+            if ($categories && !is_wp_error($categories)) {
+                echo '<div class="resource-grid-categories">';
+                foreach ($categories as $category) {
+                    echo '<span class="resource-grid-category-badge">' . esc_html($category->name) . '</span>';
+                }
+                echo '</div>';
+            }
+            
+            echo '<div class="resource-grid-excerpt">' . get_the_excerpt() . '</div>';
+            
+            echo '<div class="resource-grid-meta">';
+            if (!empty($file_type)) {
+                echo '<span class="resource-grid-type"><strong>Type:</strong> ' . esc_html($file_type) . '</span>';
+            }
+            if (!empty($file_size)) {
+                echo '<span class="resource-grid-size"><strong>Size:</strong> ' . esc_html($file_size) . '</span>';
+            }
+            if (!empty($download_count)) {
+                echo '<span class="resource-grid-downloads"><strong>Downloads:</strong> ' . number_format($download_count) . '</span>';
+            }
+            echo '</div>';
+            
+            echo '<div class="resource-grid-actions">';
+            if (!empty($file_url)) {
+                if ($access_level === 'restricted' && !is_user_logged_in()) {
+                    echo '<a href="' . wp_login_url(get_permalink()) . '" class="resource-grid-download-btn restricted">🔒 Login to Download</a>';
+                } else {
+                    $download_url = add_query_arg('download_resource', $resource_id, home_url('/'));
+                    echo '<a href="' . esc_url($download_url) . '" class="resource-grid-download-btn" target="_blank">⬇️ Download</a>';
+                }
+            }
+            echo '<a href="' . get_permalink() . '" class="resource-grid-view-btn">View Details</a>';
+            echo '</div>';
+            
+            echo '</div>';
+            echo '</div>';
+        }
+        
+        echo '</div>';
+        echo '</div>';
+        
+        // Add CSS for resources grid
+        echo '<style>
+        .lumina-resources-grid-shortcode {
+            margin: 30px 0;
+        }
+        .resources-grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+        }
+        .resource-grid-card {
+            background: #FFFFFF;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            display: flex;
+            gap: 20px;
+        }
+        .resource-grid-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 61, 112, 0.15);
+        }
+        .resource-grid-icon {
+            font-size: 50px;
+            flex-shrink: 0;
+        }
+        .resource-grid-content {
+            flex: 1;
+        }
+        .resource-grid-title {
+            margin: 0 0 12px 0;
+            font-size: 20px;
+            line-height: 1.4;
+        }
+        .resource-grid-title a {
+            color: #003d70;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        .resource-grid-title a:hover {
+            color: #7EBEC5;
+        }
+        .resource-grid-categories {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        .resource-grid-category-badge {
+            background: #7EBEC5;
+            color: #FFFFFF;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .resource-grid-excerpt {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+        .resource-grid-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f7f7f7;
+            border-radius: 8px;
+            font-size: 13px;
+        }
+        .resource-grid-meta span {
+            color: #666;
+        }
+        .resource-grid-meta strong {
+            color: #003d70;
+        }
+        .resource-grid-actions {
+            display: flex;
+            gap: 10px;
+        }
+        .resource-grid-download-btn,
+        .resource-grid-view-btn {
+            flex: 1;
+            text-align: center;
+            padding: 12px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .resource-grid-download-btn {
+            background: #F39A3B;
+            color: #FFFFFF;
+        }
+        .resource-grid-download-btn:hover {
+            background: #003d70;
+        }
+        .resource-grid-download-btn.restricted {
+            background: #999;
+        }
+        .resource-grid-download-btn.restricted:hover {
+            background: #666;
+        }
+        .resource-grid-view-btn {
+            background: #FFFFFF;
+            color: #003d70;
+            border: 2px solid #003d70;
+        }
+        .resource-grid-view-btn:hover {
+            background: #003d70;
+            color: #FFFFFF;
+        }
+        
+        @media (max-width: 768px) {
+            .resources-grid-container {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            .resource-grid-card {
+                flex-direction: column;
+                text-align: center;
+            }
+            .resource-grid-icon {
+                font-size: 60px;
+            }
+            .resource-grid-actions {
+                flex-direction: column;
+            }
+        }
+        </style>';
+        
+    } else {
+        echo '<div class="lumina-resources-grid-shortcode">';
+        echo '<div class="no-resources-message" style="text-align: center; padding: 60px 20px; background: #FFFFFF; border-radius: 12px;">';
+        echo '<div style="font-size: 60px; margin-bottom: 20px; opacity: 0.3;">📁</div>';
+        echo '<h3 style="color: #003d70; font-size: 24px; margin-bottom: 15px;">No Resources Found</h3>';
+        echo '<p style="color: #666; font-size: 16px;">There are currently no resources available. Please check back later.</p>';
+        echo '</div>';
+        echo '</div>';
+    }
+    
+    wp_reset_postdata();
+    
+    return ob_get_clean();
+}
+add_shortcode('lumina_resources_grid', 'lumina_resources_grid_shortcode');

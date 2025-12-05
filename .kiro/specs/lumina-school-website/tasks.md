@@ -252,7 +252,7 @@
   - Implement download tracking functionality
   - _Requirements: 12.1, 12.2, 12.3, 12.4, 12.5_
 
-- [ ] 20. Build Resources page with downloadable documents
+- [x] 20. Build Resources page with downloadable documents
   - Design Resources page layout
   - Display resources organized by categories
   - Show file type and size information for each resource
