@@ -209,7 +209,7 @@
   - **Property 34: Event category filtering**
   - **Validates: Requirements 10.5**
 
-- [ ] 17. Configure blog/news functionality
+- [x] 17. Configure blog/news functionality
   - Set up WordPress posts for news articles
   - Create news category taxonomy (Academics, Achievements, Events, General)
   - Configure featured images for posts
@@ -218,7 +218,7 @@
   - Build single post template
   - _Requirements: 11.1, 11.2, 11.3, 11.5_
 
-- [ ] 18. Build News page with article listing
+- [-] 18. Build News page with article listing
   - Design News page layout
   - Display articles in reverse chronological order
   - Show featured images, titles, dates, and excerpts
