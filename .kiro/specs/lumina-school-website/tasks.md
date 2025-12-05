@@ -277,7 +277,7 @@
   - **Property 42: Download count tracking**
   - **Validates: Requirements 12.5**
 
-- [ ] 21. Build Gallery page with image organization
+- [-] 21. Build Gallery page with image organization
   - Create Gallery page layout
   - Implement filterable image grid with categories (Events, Facilities, Activities, Achievements)
   - Add category tabs for filtering
