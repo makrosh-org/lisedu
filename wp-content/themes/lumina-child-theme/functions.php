@@ -1189,6 +1189,387 @@ function lumina_save_event_meta_data($post_id) {
 add_action('save_post_lis_event', 'lumina_save_event_meta_data');
 
 /**
+ * Register Custom Post Type: Resources
+ * Requirements: 12.1, 12.2, 12.3, 12.4, 12.5 - Downloadable resources management
+ * Task 19: Create custom post type for Resources
+ * 
+ * This custom post type handles downloadable resources including admission forms,
+ * academic policies, parent handbook, fee information, and calendar documents.
+ */
+function lumina_register_resources_post_type() {
+    $labels = array(
+        'name'                  => _x('Resources', 'Post Type General Name', 'lumina-child-theme'),
+        'singular_name'         => _x('Resource', 'Post Type Singular Name', 'lumina-child-theme'),
+        'menu_name'             => __('Resources', 'lumina-child-theme'),
+        'name_admin_bar'        => __('Resource', 'lumina-child-theme'),
+        'archives'              => __('Resource Archives', 'lumina-child-theme'),
+        'attributes'            => __('Resource Attributes', 'lumina-child-theme'),
+        'parent_item_colon'     => __('Parent Resource:', 'lumina-child-theme'),
+        'all_items'             => __('All Resources', 'lumina-child-theme'),
+        'add_new_item'          => __('Add New Resource', 'lumina-child-theme'),
+        'add_new'               => __('Add New', 'lumina-child-theme'),
+        'new_item'              => __('New Resource', 'lumina-child-theme'),
+        'edit_item'             => __('Edit Resource', 'lumina-child-theme'),
+        'update_item'           => __('Update Resource', 'lumina-child-theme'),
+        'view_item'             => __('View Resource', 'lumina-child-theme'),
+        'view_items'            => __('View Resources', 'lumina-child-theme'),
+        'search_items'          => __('Search Resource', 'lumina-child-theme'),
+        'not_found'             => __('Not found', 'lumina-child-theme'),
+        'not_found_in_trash'    => __('Not found in Trash', 'lumina-child-theme'),
+        'featured_image'        => __('Resource Thumbnail', 'lumina-child-theme'),
+        'set_featured_image'    => __('Set resource thumbnail', 'lumina-child-theme'),
+        'remove_featured_image' => __('Remove resource thumbnail', 'lumina-child-theme'),
+        'use_featured_image'    => __('Use as resource thumbnail', 'lumina-child-theme'),
+        'insert_into_item'      => __('Insert into resource', 'lumina-child-theme'),
+        'uploaded_to_this_item' => __('Uploaded to this resource', 'lumina-child-theme'),
+        'items_list'            => __('Resources list', 'lumina-child-theme'),
+        'items_list_navigation' => __('Resources list navigation', 'lumina-child-theme'),
+        'filter_items_list'     => __('Filter resources list', 'lumina-child-theme'),
+    );
+    
+    $args = array(
+        'label'                 => __('Resource', 'lumina-child-theme'),
+        'description'           => __('Downloadable resources and documents', 'lumina-child-theme'),
+        'labels'                => $labels,
+        'supports'              => array('title', 'editor', 'thumbnail', 'excerpt', 'revisions'),
+        'taxonomies'            => array('resource_category'),
+        'hierarchical'          => false,
+        'public'                => true,
+        'show_ui'               => true,
+        'show_in_menu'          => true,
+        'menu_position'         => 7,
+        'menu_icon'             => 'dashicons-media-document',
+        'show_in_admin_bar'     => true,
+        'show_in_nav_menus'     => true,
+        'can_export'            => true,
+        'has_archive'           => true,
+        'exclude_from_search'   => false,
+        'publicly_queryable'    => true,
+        'capability_type'       => 'post',
+        'show_in_rest'          => true, // Enable Gutenberg editor
+        'rewrite'               => array('slug' => 'resources', 'with_front' => false),
+    );
+    
+    register_post_type('lis_resource', $args);
+}
+add_action('init', 'lumina_register_resources_post_type', 0);
+
+/**
+ * Register Resource Category Taxonomy
+ * Requirements: 12.1 - Resource categories (Admission Forms, Academic Policies, etc.)
+ */
+function lumina_register_resource_category_taxonomy() {
+    $labels = array(
+        'name'                       => _x('Resource Categories', 'Taxonomy General Name', 'lumina-child-theme'),
+        'singular_name'              => _x('Resource Category', 'Taxonomy Singular Name', 'lumina-child-theme'),
+        'menu_name'                  => __('Resource Categories', 'lumina-child-theme'),
+        'all_items'                  => __('All Categories', 'lumina-child-theme'),
+        'parent_item'                => __('Parent Category', 'lumina-child-theme'),
+        'parent_item_colon'          => __('Parent Category:', 'lumina-child-theme'),
+        'new_item_name'              => __('New Category Name', 'lumina-child-theme'),
+        'add_new_item'               => __('Add New Category', 'lumina-child-theme'),
+        'edit_item'                  => __('Edit Category', 'lumina-child-theme'),
+        'update_item'                => __('Update Category', 'lumina-child-theme'),
+        'view_item'                  => __('View Category', 'lumina-child-theme'),
+        'separate_items_with_commas' => __('Separate categories with commas', 'lumina-child-theme'),
+        'add_or_remove_items'        => __('Add or remove categories', 'lumina-child-theme'),
+        'choose_from_most_used'      => __('Choose from the most used', 'lumina-child-theme'),
+        'popular_items'              => __('Popular Categories', 'lumina-child-theme'),
+        'search_items'               => __('Search Categories', 'lumina-child-theme'),
+        'not_found'                  => __('Not Found', 'lumina-child-theme'),
+        'no_terms'                   => __('No categories', 'lumina-child-theme'),
+        'items_list'                 => __('Categories list', 'lumina-child-theme'),
+        'items_list_navigation'      => __('Categories list navigation', 'lumina-child-theme'),
+    );
+    
+    $args = array(
+        'labels'                     => $labels,
+        'hierarchical'               => true,
+        'public'                     => true,
+        'show_ui'                    => true,
+        'show_admin_column'          => true,
+        'show_in_nav_menus'          => true,
+        'show_tagcloud'              => false,
+        'show_in_rest'               => true,
+        'rewrite'                    => array('slug' => 'resource-category'),
+    );
+    
+    register_taxonomy('resource_category', array('lis_resource'), $args);
+}
+add_action('init', 'lumina_register_resource_category_taxonomy', 0);
+
+/**
+ * Add custom meta boxes for Resource custom fields
+ * Requirements: 12.2, 12.3, 12.4, 12.5 - File upload, type, size, download count, access level
+ */
+function lumina_add_resource_meta_boxes() {
+    add_meta_box(
+        'lumina_resource_details',
+        __('Resource Details', 'lumina-child-theme'),
+        'lumina_resource_details_callback',
+        'lis_resource',
+        'normal',
+        'high'
+    );
+}
+add_action('add_meta_boxes', 'lumina_add_resource_meta_boxes');
+
+/**
+ * Meta box callback function for resource details
+ */
+function lumina_resource_details_callback($post) {
+    // Add nonce for security
+    wp_nonce_field('lumina_resource_details_nonce', 'lumina_resource_details_nonce_field');
+    
+    // Get existing values
+    $file_url = get_post_meta($post->ID, '_resource_file_url', true);
+    $file_type = get_post_meta($post->ID, '_resource_file_type', true);
+    $file_size = get_post_meta($post->ID, '_resource_file_size', true);
+    $download_count = get_post_meta($post->ID, '_resource_download_count', true);
+    $access_level = get_post_meta($post->ID, '_resource_access_level', true);
+    
+    // Default values
+    if (empty($download_count)) {
+        $download_count = 0;
+    }
+    if (empty($access_level)) {
+        $access_level = 'public';
+    }
+    
+    // Display fields
+    ?>
+    <div class="lumina-resource-meta-fields">
+        <p>
+            <label for="resource_file_upload"><strong><?php _e('Upload File:', 'lumina-child-theme'); ?></strong> <span style="color: red;">*</span></label><br>
+            <input type="text" id="resource_file_url" name="resource_file_url" value="<?php echo esc_attr($file_url); ?>" class="widefat" readonly>
+            <button type="button" class="button resource-upload-button" data-target="resource_file_url"><?php _e('Upload File', 'lumina-child-theme'); ?></button>
+            <button type="button" class="button resource-remove-button" data-target="resource_file_url" style="<?php echo empty($file_url) ? 'display:none;' : ''; ?>"><?php _e('Remove File', 'lumina-child-theme'); ?></button>
+            <span class="description"><?php _e('Upload a file (PDF, DOC, DOCX, XLS, XLSX supported)', 'lumina-child-theme'); ?></span>
+            <?php if (!empty($file_url)): ?>
+                <div class="resource-file-preview" style="margin-top: 10px;">
+                    <strong>Current File:</strong> <a href="<?php echo esc_url($file_url); ?>" target="_blank"><?php echo basename($file_url); ?></a>
+                </div>
+            <?php endif; ?>
+        </p>
+        
+        <p>
+            <label for="resource_file_type"><strong><?php _e('File Type:', 'lumina-child-theme'); ?></strong></label><br>
+            <input type="text" id="resource_file_type" name="resource_file_type" value="<?php echo esc_attr($file_type); ?>" class="widefat" readonly>
+            <span class="description"><?php _e('File type is automatically detected from the uploaded file', 'lumina-child-theme'); ?></span>
+        </p>
+        
+        <p>
+            <label for="resource_file_size"><strong><?php _e('File Size:', 'lumina-child-theme'); ?></strong></label><br>
+            <input type="text" id="resource_file_size" name="resource_file_size" value="<?php echo esc_attr($file_size); ?>" class="widefat" readonly>
+            <span class="description"><?php _e('File size is automatically calculated from the uploaded file', 'lumina-child-theme'); ?></span>
+        </p>
+        
+        <p>
+            <label for="resource_access_level"><strong><?php _e('Access Level:', 'lumina-child-theme'); ?></strong></label><br>
+            <select id="resource_access_level" name="resource_access_level" class="widefat">
+                <option value="public" <?php selected($access_level, 'public'); ?>><?php _e('Public - Anyone can download', 'lumina-child-theme'); ?></option>
+                <option value="restricted" <?php selected($access_level, 'restricted'); ?>><?php _e('Restricted - Logged in users only', 'lumina-child-theme'); ?></option>
+            </select>
+            <span class="description"><?php _e('Choose who can access this resource', 'lumina-child-theme'); ?></span>
+        </p>
+        
+        <p>
+            <label for="resource_download_count"><strong><?php _e('Download Count:', 'lumina-child-theme'); ?></strong></label><br>
+            <input type="number" id="resource_download_count" name="resource_download_count" value="<?php echo esc_attr($download_count); ?>" class="widefat" readonly>
+            <span class="description"><?php _e('Total number of times this resource has been downloaded (automatically tracked)', 'lumina-child-theme'); ?></span>
+        </p>
+    </div>
+    
+    <style>
+        .lumina-resource-meta-fields p {
+            margin-bottom: 20px;
+        }
+        .lumina-resource-meta-fields label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .lumina-resource-meta-fields .description {
+            display: block;
+            margin-top: 5px;
+            font-style: italic;
+            color: #666;
+        }
+        .resource-upload-button,
+        .resource-remove-button {
+            margin-top: 5px;
+        }
+        .resource-file-preview {
+            padding: 10px;
+            background: #f7f7f7;
+            border-radius: 4px;
+        }
+    </style>
+    
+    <script>
+    jQuery(document).ready(function($) {
+        var mediaUploader;
+        
+        $('.resource-upload-button').on('click', function(e) {
+            e.preventDefault();
+            var button = $(this);
+            var targetInput = $('#' + button.data('target'));
+            
+            // If the uploader object has already been created, reopen the dialog
+            if (mediaUploader) {
+                mediaUploader.open();
+                return;
+            }
+            
+            // Extend the wp.media object
+            mediaUploader = wp.media({
+                title: 'Choose Resource File',
+                button: {
+                    text: 'Use this file'
+                },
+                library: {
+                    type: ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']
+                },
+                multiple: false
+            });
+            
+            // When a file is selected, run a callback
+            mediaUploader.on('select', function() {
+                var attachment = mediaUploader.state().get('selection').first().toJSON();
+                targetInput.val(attachment.url);
+                
+                // Auto-detect file type
+                var fileExtension = attachment.filename.split('.').pop().toUpperCase();
+                $('#resource_file_type').val(fileExtension);
+                
+                // Auto-calculate file size
+                var fileSize = attachment.filesizeHumanReadable;
+                $('#resource_file_size').val(fileSize);
+                
+                // Show remove button and file preview
+                button.next('.resource-remove-button').show();
+                
+                // Update or create preview
+                var preview = button.parent().find('.resource-file-preview');
+                if (preview.length) {
+                    preview.find('a').attr('href', attachment.url).text(attachment.filename);
+                } else {
+                    button.parent().append('<div class="resource-file-preview" style="margin-top: 10px;"><strong>Current File:</strong> <a href="' + attachment.url + '" target="_blank">' + attachment.filename + '</a></div>');
+                }
+            });
+            
+            // Open the uploader dialog
+            mediaUploader.open();
+        });
+        
+        $('.resource-remove-button').on('click', function(e) {
+            e.preventDefault();
+            var button = $(this);
+            var targetInput = $('#' + button.data('target'));
+            
+            targetInput.val('');
+            $('#resource_file_type').val('');
+            $('#resource_file_size').val('');
+            button.hide();
+            button.parent().find('.resource-file-preview').remove();
+        });
+    });
+    </script>
+    <?php
+}
+
+/**
+ * Save resource custom field data
+ */
+function lumina_save_resource_meta_data($post_id) {
+    // Check if nonce is set
+    if (!isset($_POST['lumina_resource_details_nonce_field'])) {
+        return;
+    }
+    
+    // Verify nonce
+    if (!wp_verify_nonce($_POST['lumina_resource_details_nonce_field'], 'lumina_resource_details_nonce')) {
+        return;
+    }
+    
+    // Check if this is an autosave
+    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+        return;
+    }
+    
+    // Check user permissions
+    if (!current_user_can('edit_post', $post_id)) {
+        return;
+    }
+    
+    // Save file URL (required)
+    if (isset($_POST['resource_file_url'])) {
+        update_post_meta($post_id, '_resource_file_url', esc_url_raw($_POST['resource_file_url']));
+    }
+    
+    // Save file type
+    if (isset($_POST['resource_file_type'])) {
+        update_post_meta($post_id, '_resource_file_type', sanitize_text_field($_POST['resource_file_type']));
+    }
+    
+    // Save file size
+    if (isset($_POST['resource_file_size'])) {
+        update_post_meta($post_id, '_resource_file_size', sanitize_text_field($_POST['resource_file_size']));
+    }
+    
+    // Save access level
+    if (isset($_POST['resource_access_level'])) {
+        update_post_meta($post_id, '_resource_access_level', sanitize_text_field($_POST['resource_access_level']));
+    }
+    
+    // Save download count (don't allow manual editing, but preserve value)
+    if (isset($_POST['resource_download_count'])) {
+        $current_count = get_post_meta($post_id, '_resource_download_count', true);
+        if (empty($current_count)) {
+            update_post_meta($post_id, '_resource_download_count', 0);
+        }
+    }
+}
+add_action('save_post_lis_resource', 'lumina_save_resource_meta_data');
+
+/**
+ * Handle resource download tracking
+ * Requirements: 12.5 - Track download counts for administrative reporting
+ */
+function lumina_track_resource_download() {
+    if (isset($_GET['download_resource']) && !empty($_GET['download_resource'])) {
+        $resource_id = intval($_GET['download_resource']);
+        
+        // Verify this is a valid resource post
+        if (get_post_type($resource_id) !== 'lis_resource') {
+            return;
+        }
+        
+        // Check access level
+        $access_level = get_post_meta($resource_id, '_resource_access_level', true);
+        if ($access_level === 'restricted' && !is_user_logged_in()) {
+            wp_die('You must be logged in to download this resource.', 'Access Denied', array('response' => 403));
+        }
+        
+        // Get file URL
+        $file_url = get_post_meta($resource_id, '_resource_file_url', true);
+        
+        if (empty($file_url)) {
+            wp_die('Resource file not found.', 'File Not Found', array('response' => 404));
+        }
+        
+        // Increment download count
+        $current_count = get_post_meta($resource_id, '_resource_download_count', true);
+        $new_count = intval($current_count) + 1;
+        update_post_meta($resource_id, '_resource_download_count', $new_count);
+        
+        // Redirect to file or initiate download
+        wp_redirect($file_url);
+        exit;
+    }
+}
+add_action('template_redirect', 'lumina_track_resource_download');
+
+/**
  * Flush rewrite rules on theme activation to ensure custom post type URLs work
  */
 function lumina_flush_rewrite_rules_on_activation() {
@@ -1196,6 +1577,8 @@ function lumina_flush_rewrite_rules_on_activation() {
     lumina_register_program_category_taxonomy();
     lumina_register_events_post_type();
     lumina_register_event_category_taxonomy();
+    lumina_register_resources_post_type();
+    lumina_register_resource_category_taxonomy();
     flush_rewrite_rules();
 }
 register_activation_hook(__FILE__, 'lumina_flush_rewrite_rules_on_activation');

@@ -244,7 +244,7 @@
   - **Property 38: News category support**
   - **Validates: Requirements 11.5**
 
-- [ ] 19. Create custom post type for Resources
+- [x] 19. Create custom post type for Resources
   - Register 'lis_resource' custom post type
   - Add custom fields for file upload, file type, file size, download count, access level
   - Create resource category taxonomy (Admission Forms, Academic Policies, Parent Handbook, Fee Information, Calendar)
