@@ -1587,3 +1587,542 @@ function lumina_programs_grid_shortcode() {
     return ob_get_clean();
 }
 add_shortcode('lumina_programs_grid', 'lumina_programs_grid_shortcode');
+
+/**
+ * Shortcode: Display news category filter buttons
+ * Requirements: 11.5 - Support categorizing news articles by topics
+ * Task 18: Build News page with article listing
+ * 
+ * Usage: [lumina_news_categories]
+ */
+function lumina_news_categories_shortcode() {
+    $categories = get_categories(array(
+        'orderby' => 'name',
+        'order' => 'ASC',
+        'hide_empty' => true,
+    ));
+    
+    ob_start();
+    
+    echo '<div class="lumina-news-categories">';
+    echo '<div class="category-filter-buttons">';
+    
+    // All News button
+    $current_category = get_query_var('cat');
+    $all_active = empty($current_category) ? 'active' : '';
+    $news_page_url = get_permalink(get_page_by_path('news'));
+    
+    echo '<a href="' . esc_url($news_page_url) . '" class="category-filter-btn ' . $all_active . '" data-category="all">';
+    echo 'All News';
+    echo '</a>';
+    
+    // Category buttons
+    foreach ($categories as $category) {
+        if ($category->slug !== 'uncategorized') {
+            $is_active = ($current_category == $category->term_id) ? 'active' : '';
+            echo '<a href="' . esc_url(get_category_link($category->term_id)) . '" class="category-filter-btn ' . $is_active . '" data-category="' . esc_attr($category->slug) . '">';
+            echo esc_html($category->name);
+            echo '</a>';
+        }
+    }
+    
+    echo '</div>';
+    echo '</div>';
+    
+    // Add CSS for category filter
+    echo '<style>
+    .lumina-news-categories {
+        background: #FFFFFF;
+        padding: 25px 30px;
+        border-radius: 12px;
+        margin-bottom: 40px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+    
+    .category-filter-buttons {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        justify-content: center;
+    }
+    
+    .category-filter-btn {
+        padding: 12px 24px;
+        background: #f7f7f7;
+        color: #003d70;
+        text-decoration: none;
+        border-radius: 25px;
+        font-size: 15px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+    }
+    
+    .category-filter-btn:hover {
+        background: #7EBEC5;
+        color: #FFFFFF;
+        transform: translateY(-2px);
+    }
+    
+    .category-filter-btn.active {
+        background: #003d70;
+        color: #FFFFFF;
+        border-color: #003d70;
+    }
+    
+    @media (max-width: 768px) {
+        .lumina-news-categories {
+            padding: 20px;
+        }
+        
+        .category-filter-buttons {
+            flex-direction: column;
+        }
+        
+        .category-filter-btn {
+            text-align: center;
+        }
+    }
+    </style>';
+    
+    return ob_get_clean();
+}
+add_shortcode('lumina_news_categories', 'lumina_news_categories_shortcode');
+
+/**
+ * Shortcode: Display news articles grid with pagination
+ * Requirements: 11.1, 11.2, 11.3, 11.5 - Display articles with all required fields
+ * Task 18: Build News page with article listing
+ * 
+ * Usage: [lumina_news_grid posts_per_page="9"]
+ */
+function lumina_news_grid_shortcode($atts) {
+    $atts = shortcode_atts(array(
+        'posts_per_page' => 9,
+        'category' => '',
+    ), $atts);
+    
+    // Get current page for pagination
+    $paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
+    
+    // Build query args
+    $args = array(
+        'post_type' => 'post',
+        'posts_per_page' => intval($atts['posts_per_page']),
+        'post_status' => 'publish',
+        'orderby' => 'date',
+        'order' => 'DESC', // Reverse chronological order (Requirement 11.1)
+        'paged' => $paged,
+    );
+    
+    // Add category filter if specified
+    if (!empty($atts['category'])) {
+        $args['category_name'] = $atts['category'];
+    }
+    
+    // Check if we're on a category page
+    if (is_category()) {
+        $args['cat'] = get_query_var('cat');
+    }
+    
+    $news_query = new WP_Query($args);
+    
+    ob_start();
+    
+    if ($news_query->have_posts()) {
+        echo '<div class="lumina-news-grid">';
+        
+        while ($news_query->have_posts()) {
+            $news_query->the_post();
+            $post_id = get_the_ID();
+            $categories = get_the_category();
+            
+            echo '<article id="post-' . $post_id . '" class="news-grid-card">';
+            
+            // Featured Image (Requirement 11.3)
+            if (has_post_thumbnail()) {
+                echo '<div class="news-card-image">';
+                echo '<a href="' . get_permalink() . '">';
+                the_post_thumbnail('lumina-news', array('alt' => get_the_title()));
+                echo '</a>';
+                
+                // Category badge
+                if (!empty($categories)) {
+                    $primary_category = $categories[0];
+                    echo '<span class="news-category-badge">' . esc_html($primary_category->name) . '</span>';
+                }
+                
+                echo '</div>';
+            } else {
+                // Placeholder if no featured image
+                echo '<div class="news-card-image news-card-placeholder">';
+                echo '<a href="' . get_permalink() . '">';
+                echo '<div class="placeholder-content">';
+                echo '<span class="placeholder-icon">📰</span>';
+                echo '</div>';
+                echo '</a>';
+                
+                if (!empty($categories)) {
+                    $primary_category = $categories[0];
+                    echo '<span class="news-category-badge">' . esc_html($primary_category->name) . '</span>';
+                }
+                
+                echo '</div>';
+            }
+            
+            // Article Content
+            echo '<div class="news-card-content">';
+            
+            // Title (Requirement 11.2)
+            echo '<h3 class="news-card-title">';
+            echo '<a href="' . get_permalink() . '">' . get_the_title() . '</a>';
+            echo '</h3>';
+            
+            // Meta Information - Date and Author (Requirement 11.2)
+            echo '<div class="news-card-meta">';
+            echo '<span class="news-card-date">';
+            echo '<svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">';
+            echo '<path d="M11 2h1a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h1V1h2v1h4V1h2v1zm1 3H4v8h8V5z"/>';
+            echo '</svg>';
+            echo get_the_date('F j, Y');
+            echo '</span>';
+            
+            echo '<span class="news-card-author">';
+            echo '<svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">';
+            echo '<path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm0 1c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>';
+            echo '</svg>';
+            echo 'By ' . get_the_author();
+            echo '</span>';
+            echo '</div>';
+            
+            // Excerpt (Requirement 11.2)
+            echo '<div class="news-card-excerpt">';
+            the_excerpt();
+            echo '</div>';
+            
+            // Read More Link
+            echo '<a href="' . get_permalink() . '" class="news-card-read-more">';
+            echo 'Read Full Article';
+            echo '<svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">';
+            echo '<path d="M8 0l8 8-8 8V0z"/>';
+            echo '</svg>';
+            echo '</a>';
+            
+            echo '</div>'; // .news-card-content
+            
+            echo '</article>';
+        }
+        
+        echo '</div>'; // .lumina-news-grid
+        
+        // Pagination
+        if ($news_query->max_num_pages > 1) {
+            echo '<div class="lumina-news-pagination">';
+            
+            $pagination_args = array(
+                'total' => $news_query->max_num_pages,
+                'current' => $paged,
+                'mid_size' => 2,
+                'prev_text' => '← Previous',
+                'next_text' => 'Next →',
+                'type' => 'list',
+            );
+            
+            echo paginate_links($pagination_args);
+            
+            echo '</div>';
+        }
+        
+    } else {
+        echo '<div class="lumina-news-grid">';
+        echo '<div class="no-news-found">';
+        echo '<div class="no-news-icon">📰</div>';
+        echo '<h3>No News Articles Found</h3>';
+        echo '<p>There are currently no news articles in this category. Please check back later or browse other categories.</p>';
+        echo '<a href="' . get_permalink(get_page_by_path('news')) . '" class="back-to-all-news">View All News</a>';
+        echo '</div>';
+        echo '</div>';
+    }
+    
+    wp_reset_postdata();
+    
+    // Add CSS for news grid
+    echo '<style>
+    .lumina-news-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 30px;
+        margin-bottom: 40px;
+    }
+    
+    .news-grid-card {
+        background: #FFFFFF;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+        transition: all 0.3s ease;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .news-grid-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0, 61, 112, 0.15);
+    }
+    
+    .news-card-image {
+        position: relative;
+        width: 100%;
+        height: 220px;
+        overflow: hidden;
+        background: #f7f7f7;
+    }
+    
+    .news-card-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+    
+    .news-grid-card:hover .news-card-image img {
+        transform: scale(1.05);
+    }
+    
+    .news-card-placeholder {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #7EBEC5 0%, #003d70 100%);
+    }
+    
+    .placeholder-content {
+        text-align: center;
+    }
+    
+    .placeholder-icon {
+        font-size: 70px;
+        opacity: 0.3;
+    }
+    
+    .news-category-badge {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background: #F39A3B;
+        color: #FFFFFF;
+        padding: 6px 15px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+    
+    .news-card-content {
+        padding: 25px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .news-card-title {
+        margin: 0 0 15px 0;
+        font-size: 20px;
+        line-height: 1.4;
+    }
+    
+    .news-card-title a {
+        color: #003d70;
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+    
+    .news-card-title a:hover {
+        color: #7EBEC5;
+    }
+    
+    .news-card-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        margin-bottom: 15px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid #f7f7f7;
+    }
+    
+    .news-card-date,
+    .news-card-author {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        color: #999;
+        font-size: 13px;
+    }
+    
+    .news-card-date svg,
+    .news-card-author svg {
+        color: #7EBEC5;
+    }
+    
+    .news-card-excerpt {
+        color: #666;
+        line-height: 1.7;
+        margin-bottom: 20px;
+        flex: 1;
+    }
+    
+    .news-card-excerpt p {
+        margin: 0;
+    }
+    
+    .news-card-read-more {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: #F39A3B;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 15px;
+        transition: all 0.3s ease;
+        align-self: flex-start;
+    }
+    
+    .news-card-read-more:hover {
+        color: #003d70;
+        gap: 12px;
+    }
+    
+    .news-card-read-more svg {
+        transition: transform 0.3s ease;
+    }
+    
+    .news-card-read-more:hover svg {
+        transform: translateX(3px);
+    }
+    
+    /* No News Found */
+    .no-news-found {
+        grid-column: 1 / -1;
+        text-align: center;
+        padding: 80px 20px;
+        background: #FFFFFF;
+        border-radius: 12px;
+    }
+    
+    .no-news-icon {
+        font-size: 80px;
+        margin-bottom: 20px;
+        opacity: 0.3;
+    }
+    
+    .no-news-found h3 {
+        color: #003d70;
+        font-size: 28px;
+        margin-bottom: 15px;
+    }
+    
+    .no-news-found p {
+        color: #666;
+        font-size: 16px;
+        line-height: 1.6;
+        margin-bottom: 30px;
+    }
+    
+    .back-to-all-news {
+        display: inline-block;
+        padding: 12px 30px;
+        background: #F39A3B;
+        color: #FFFFFF;
+        text-decoration: none;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    
+    .back-to-all-news:hover {
+        background: #003d70;
+    }
+    
+    /* Pagination */
+    .lumina-news-pagination {
+        margin-top: 40px;
+        text-align: center;
+    }
+    
+    .lumina-news-pagination .page-numbers {
+        display: inline-flex;
+        justify-content: center;
+        gap: 10px;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+    
+    .lumina-news-pagination .page-numbers li {
+        display: inline-block;
+    }
+    
+    .lumina-news-pagination a,
+    .lumina-news-pagination span {
+        display: inline-block;
+        padding: 10px 18px;
+        background: #FFFFFF;
+        color: #003d70;
+        text-decoration: none;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        border: 2px solid #f7f7f7;
+    }
+    
+    .lumina-news-pagination a:hover,
+    .lumina-news-pagination .current {
+        background: #003d70;
+        color: #FFFFFF;
+        border-color: #003d70;
+    }
+    
+    .lumina-news-pagination .dots {
+        background: transparent;
+        border: none;
+        cursor: default;
+    }
+    
+    .lumina-news-pagination .dots:hover {
+        background: transparent;
+        color: #003d70;
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .lumina-news-grid {
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+        
+        .news-card-meta {
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .news-card-content {
+            padding: 20px;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .news-card-image {
+            height: 200px;
+        }
+        
+        .news-card-title {
+            font-size: 18px;
+        }
+    }
+    </style>';
+    
+    return ob_get_clean();
+}
+add_shortcode('lumina_news_grid', 'lumina_news_grid_shortcode');
