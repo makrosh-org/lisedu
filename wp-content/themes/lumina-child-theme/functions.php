@@ -2780,3 +2780,447 @@ function lumina_resources_grid_shortcode($atts) {
     return ob_get_clean();
 }
 add_shortcode('lumina_resources_grid', 'lumina_resources_grid_shortcode');
+
+/**
+ * Shortcode: Display filterable gallery with categories
+ * Requirements: 4.1, 4.2, 4.3, 4.4, 4.5
+ * 
+ * Usage: [lumina_gallery]
+ */
+function lumina_gallery_shortcode($atts) {
+    $atts = shortcode_atts(array(
+        'category' => '',
+    ), $atts);
+    
+    // Get all attachments (images)
+    $args = array(
+        'post_type' => 'attachment',
+        'post_mime_type' => array('image/jpeg', 'image/png', 'image/webp'),
+        'post_status' => 'inherit',
+        'posts_per_page' => -1,
+        'orderby' => 'date',
+        'order' => 'DESC',
+    );
+    
+    $attachments = get_posts($args);
+    
+    // Organize images by category (using alt text or custom taxonomy)
+    $categorized_images = array(
+        'all' => array(),
+        'events' => array(),
+        'facilities' => array(),
+        'activities' => array(),
+        'achievements' => array(),
+    );
+    
+    foreach ($attachments as $attachment) {
+        $image_data = array(
+            'id' => $attachment->ID,
+            'url' => wp_get_attachment_url($attachment->ID),
+            'thumb' => wp_get_attachment_image_url($attachment->ID, 'lumina-gallery-thumb'),
+            'full' => wp_get_attachment_image_url($attachment->ID, 'full'),
+            'title' => get_the_title($attachment->ID),
+            'alt' => get_post_meta($attachment->ID, '_wp_attachment_image_alt', true),
+        );
+        
+        // Add to 'all' category
+        $categorized_images['all'][] = $image_data;
+        
+        // Categorize based on alt text or title keywords
+        $search_text = strtolower($image_data['title'] . ' ' . $image_data['alt']);
+        
+        if (strpos($search_text, 'event') !== false) {
+            $categorized_images['events'][] = $image_data;
+        }
+        if (strpos($search_text, 'facility') !== false || strpos($search_text, 'classroom') !== false || 
+            strpos($search_text, 'library') !== false || strpos($search_text, 'playground') !== false) {
+            $categorized_images['facilities'][] = $image_data;
+        }
+        if (strpos($search_text, 'activity') !== false || strpos($search_text, 'activities') !== false) {
+            $categorized_images['activities'][] = $image_data;
+        }
+        if (strpos($search_text, 'achievement') !== false || strpos($search_text, 'award') !== false) {
+            $categorized_images['achievements'][] = $image_data;
+        }
+    }
+    
+    ob_start();
+    
+    if (!empty($categorized_images['all'])) {
+        ?>
+        <div class="lumina-gallery-container">
+            <!-- Category Filter Tabs -->
+            <div class="gallery-filter-tabs">
+                <button class="gallery-tab active" data-category="all">All Images</button>
+                <button class="gallery-tab" data-category="events">Events</button>
+                <button class="gallery-tab" data-category="facilities">Facilities</button>
+                <button class="gallery-tab" data-category="activities">Activities</button>
+                <button class="gallery-tab" data-category="achievements">Achievements</button>
+            </div>
+            
+            <!-- Gallery Grid -->
+            <div class="gallery-grid" id="lumina-gallery-grid">
+                <?php foreach ($categorized_images as $category => $images): ?>
+                    <?php foreach ($images as $image): ?>
+                        <div class="gallery-item" data-category="<?php echo esc_attr($category); ?>" data-image-id="<?php echo esc_attr($image['id']); ?>">
+                            <img 
+                                src="<?php echo esc_url($image['thumb']); ?>" 
+                                data-full="<?php echo esc_url($image['full']); ?>"
+                                alt="<?php echo esc_attr($image['alt'] ?: $image['title']); ?>"
+                                loading="lazy"
+                                class="gallery-image"
+                            />
+                            <div class="gallery-overlay">
+                                <span class="gallery-zoom-icon">🔍</span>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                <?php endforeach; ?>
+            </div>
+            
+            <!-- Lightbox -->
+            <div class="gallery-lightbox" id="gallery-lightbox">
+                <button class="lightbox-close" aria-label="Close lightbox">&times;</button>
+                <button class="lightbox-prev" aria-label="Previous image">‹</button>
+                <button class="lightbox-next" aria-label="Next image">›</button>
+                <div class="lightbox-content">
+                    <img src="" alt="" id="lightbox-image" />
+                </div>
+            </div>
+        </div>
+        <?php
+        
+        // Add CSS
+        echo '<style>
+        .lumina-gallery-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* Filter Tabs */
+        .gallery-filter-tabs {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 40px;
+            padding: 20px;
+            background: #FFFFFF;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .gallery-tab {
+            padding: 12px 30px;
+            background: #f7f7f7;
+            color: #003d70;
+            border: 2px solid transparent;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .gallery-tab:hover {
+            background: #7EBEC5;
+            color: #FFFFFF;
+        }
+        
+        .gallery-tab.active {
+            background: #003d70;
+            color: #FFFFFF;
+            border-color: #003d70;
+        }
+        
+        /* Gallery Grid */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .gallery-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 12px;
+            cursor: pointer;
+            aspect-ratio: 4/3;
+            background: #f7f7f7;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .gallery-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 61, 112, 0.15);
+        }
+        
+        .gallery-item.hidden {
+            display: none;
+        }
+        
+        .gallery-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        
+        .gallery-item:hover .gallery-image {
+            transform: scale(1.1);
+        }
+        
+        .gallery-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 61, 112, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .gallery-item:hover .gallery-overlay {
+            opacity: 1;
+        }
+        
+        .gallery-zoom-icon {
+            font-size: 48px;
+            color: #FFFFFF;
+        }
+        
+        /* Lightbox */
+        .gallery-lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .gallery-lightbox.active {
+            display: flex;
+        }
+        
+        .lightbox-content {
+            max-width: 90%;
+            max-height: 90%;
+            position: relative;
+        }
+        
+        #lightbox-image {
+            max-width: 100%;
+            max-height: 90vh;
+            object-fit: contain;
+        }
+        
+        .lightbox-close,
+        .lightbox-prev,
+        .lightbox-next {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.2);
+            color: #FFFFFF;
+            border: none;
+            font-size: 40px;
+            cursor: pointer;
+            padding: 10px 20px;
+            transition: background 0.3s ease;
+            z-index: 10001;
+        }
+        
+        .lightbox-close:hover,
+        .lightbox-prev:hover,
+        .lightbox-next:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        .lightbox-close {
+            top: 20px;
+            right: 20px;
+            font-size: 50px;
+            line-height: 1;
+        }
+        
+        .lightbox-prev {
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        
+        .lightbox-next {
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .gallery-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .gallery-filter-tabs {
+                gap: 10px;
+                padding: 15px;
+            }
+            
+            .gallery-tab {
+                padding: 10px 20px;
+                font-size: 14px;
+            }
+            
+            .lightbox-prev,
+            .lightbox-next {
+                font-size: 30px;
+                padding: 5px 15px;
+            }
+            
+            .lightbox-close {
+                font-size: 40px;
+            }
+        }
+        
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .gallery-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        </style>';
+        
+        // Add JavaScript
+        echo '<script>
+        (function() {
+            // Category filtering
+            const tabs = document.querySelectorAll(".gallery-tab");
+            const galleryItems = document.querySelectorAll(".gallery-item");
+            
+            tabs.forEach(tab => {
+                tab.addEventListener("click", function() {
+                    const category = this.getAttribute("data-category");
+                    
+                    // Update active tab
+                    tabs.forEach(t => t.classList.remove("active"));
+                    this.classList.add("active");
+                    
+                    // Filter gallery items
+                    galleryItems.forEach(item => {
+                        const itemCategory = item.getAttribute("data-category");
+                        if (category === "all" || itemCategory === category) {
+                            item.classList.remove("hidden");
+                        } else {
+                            item.classList.add("hidden");
+                        }
+                    });
+                });
+            });
+            
+            // Lightbox functionality
+            const lightbox = document.getElementById("gallery-lightbox");
+            const lightboxImage = document.getElementById("lightbox-image");
+            const closeBtn = document.querySelector(".lightbox-close");
+            const prevBtn = document.querySelector(".lightbox-prev");
+            const nextBtn = document.querySelector(".lightbox-next");
+            
+            let currentImageIndex = 0;
+            let visibleImages = [];
+            
+            function updateVisibleImages() {
+                visibleImages = Array.from(document.querySelectorAll(".gallery-item:not(.hidden)"));
+            }
+            
+            function openLightbox(index) {
+                updateVisibleImages();
+                currentImageIndex = index;
+                const imageData = visibleImages[currentImageIndex].querySelector(".gallery-image");
+                lightboxImage.src = imageData.getAttribute("data-full");
+                lightboxImage.alt = imageData.alt;
+                lightbox.classList.add("active");
+                document.body.style.overflow = "hidden";
+            }
+            
+            function closeLightbox() {
+                lightbox.classList.remove("active");
+                document.body.style.overflow = "";
+            }
+            
+            function showNextImage() {
+                updateVisibleImages();
+                currentImageIndex = (currentImageIndex + 1) % visibleImages.length;
+                const imageData = visibleImages[currentImageIndex].querySelector(".gallery-image");
+                lightboxImage.src = imageData.getAttribute("data-full");
+                lightboxImage.alt = imageData.alt;
+            }
+            
+            function showPrevImage() {
+                updateVisibleImages();
+                currentImageIndex = (currentImageIndex - 1 + visibleImages.length) % visibleImages.length;
+                const imageData = visibleImages[currentImageIndex].querySelector(".gallery-image");
+                lightboxImage.src = imageData.getAttribute("data-full");
+                lightboxImage.alt = imageData.alt;
+            }
+            
+            // Open lightbox on image click
+            galleryItems.forEach((item, index) => {
+                item.addEventListener("click", function() {
+                    if (!this.classList.contains("hidden")) {
+                        updateVisibleImages();
+                        const visibleIndex = visibleImages.indexOf(this);
+                        openLightbox(visibleIndex);
+                    }
+                });
+            });
+            
+            // Close lightbox
+            closeBtn.addEventListener("click", closeLightbox);
+            
+            // Navigation
+            nextBtn.addEventListener("click", showNextImage);
+            prevBtn.addEventListener("click", showPrevImage);
+            
+            // Keyboard navigation
+            document.addEventListener("keydown", function(e) {
+                if (lightbox.classList.contains("active")) {
+                    if (e.key === "Escape") {
+                        closeLightbox();
+                    } else if (e.key === "ArrowRight") {
+                        showNextImage();
+                    } else if (e.key === "ArrowLeft") {
+                        showPrevImage();
+                    }
+                }
+            });
+            
+            // Close on background click
+            lightbox.addEventListener("click", function(e) {
+                if (e.target === lightbox) {
+                    closeLightbox();
+                }
+            });
+        })();
+        </script>';
+        
+    } else {
+        echo '<div class="lumina-gallery-container">';
+        echo '<div class="no-gallery-message" style="text-align: center; padding: 80px 20px; background: #FFFFFF; border-radius: 12px;">';
+        echo '<div style="font-size: 80px; margin-bottom: 20px; opacity: 0.3;">📷</div>';
+        echo '<h3 style="color: #003d70; font-size: 28px; margin-bottom: 15px;">No Images Yet</h3>';
+        echo '<p style="color: #666; font-size: 18px; line-height: 1.6;">Our gallery is currently empty. Please check back soon for photos of our events, facilities, activities, and achievements!</p>';
+        echo '</div>';
+        echo '</div>';
+    }
+    
+    return ob_get_clean();
+}
+add_shortcode('lumina_gallery', 'lumina_gallery_shortcode');
