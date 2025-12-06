@@ -18,6 +18,14 @@ function lumina_child_enqueue_styles() {
     // Get parent theme stylesheet
     $parent_style = 'parent-style';
     
+    // Enqueue Google Fonts - Poppins for modern look
+    wp_enqueue_style(
+        'lumina-google-fonts',
+        'https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap',
+        array(),
+        null
+    );
+    
     // Enqueue parent theme stylesheet
     wp_enqueue_style($parent_style, get_template_directory_uri() . '/style.css');
     
@@ -26,7 +34,7 @@ function lumina_child_enqueue_styles() {
         'lumina-brand-colors',
         get_stylesheet_directory_uri() . '/assets/css/brand-colors.css',
         array($parent_style),
-        '1.0.0'
+        '1.0.1'
     );
     
     // Enqueue contact form CSS

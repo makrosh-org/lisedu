@@ -9,11 +9,16 @@
  */
 
 :root {
-    /* Primary Brand Colors */
-    --base-darkblue: #003d70;
-    --base-lightgray: #f7f7f7;
-    --base-accent-teal: #7EBEC5;
-    --base-accent-orange: #F39A3B;
+    /* Primary Brand Colors - Updated to match modern design */
+    --base-darkblue: #1a2b4a;      /* Navy blue for hero and dark sections */
+    --base-mediumblue: #2c5282;    /* Medium blue for section backgrounds */
+    --base-lightblue: #3b82f6;     /* Light blue for info boxes */
+    --base-lightgray: #f3f4f6;     /* Light backgrounds */
+    --base-accent-teal: #3b82f6;   /* Updated to light blue */
+    --base-accent-orange: #f59e0b; /* Bright orange for CTAs */
+    --base-accent-yellow: #fbbf24; /* Yellow for highlights */
+    --base-accent-pink: #ec4899;   /* Pink for special sections */
+    --base-accent-green: #10b981;  /* Green for success states */
     --base-white: #FFFFFF;
     
     /* Semantic Color Mappings */
@@ -47,10 +52,13 @@
     --shadow-dark: rgba(0, 61, 112, 0.3);
 }
 
-/* Apply brand colors to common elements */
+/* Apply brand colors and modern typography */
 body {
     color: var(--color-text);
     background-color: var(--color-background);
+    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
 }
 
 a {
