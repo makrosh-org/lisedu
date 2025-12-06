@@ -34,7 +34,15 @@ function lumina_child_enqueue_styles() {
         'lumina-brand-colors',
         get_stylesheet_directory_uri() . '/assets/css/brand-colors.css',
         array($parent_style),
-        '1.0.1'
+        '1.0.2'
+    );
+    
+    // Enqueue header fixes CSS
+    wp_enqueue_style(
+        'lumina-header-fixes',
+        get_stylesheet_directory_uri() . '/assets/css/header-fixes.css',
+        array('lumina-brand-colors'),
+        '1.0.0'
     );
     
     // Enqueue contact form CSS

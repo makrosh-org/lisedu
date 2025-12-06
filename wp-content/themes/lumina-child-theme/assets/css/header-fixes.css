@@ -1,0 +1,76 @@
+/**
+ * Header and Navigation Fixes
+ * Removes underlines and improves styling
+ */
+
+/* Remove all underlines from navigation */
+.site-header a,
+.main-navigation a,
+.primary-menu a,
+.site-title a {
+    text-decoration: none !important;
+}
+
+/* Remove border from header */
+.site-header {
+    border-bottom: none !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08) !important;
+}
+
+/* Clean navigation menu styling */
+.primary-menu > li > a {
+    text-decoration: none !important;
+    border-bottom: none !important;
+    position: relative;
+}
+
+/* Modern hover effect - bottom border animation */
+.primary-menu > li > a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background: #f59e0b;
+    transition: all 0.3s ease;
+    transform: translateX(-50%);
+}
+
+.primary-menu > li > a:hover::after,
+.primary-menu > li.current-menu-item > a::after {
+    width: 80%;
+}
+
+/* Remove underline from site title */
+.site-title a:hover,
+.site-title a:focus {
+    text-decoration: none !important;
+}
+
+/* Dropdown menu links */
+.primary-menu .sub-menu a {
+    text-decoration: none !important;
+}
+
+.primary-menu .sub-menu a:hover {
+    text-decoration: none !important;
+    background: #f3f4f6;
+}
+
+/* Footer links - no underline */
+.site-footer a {
+    text-decoration: none !important;
+}
+
+.site-footer a:hover {
+    text-decoration: none !important;
+    opacity: 0.8;
+}
+
+/* Mobile menu */
+@media (max-width: 768px) {
+    .primary-menu li a {
+        text-decoration: none !important;
+    }
+}

@@ -51,11 +51,12 @@
 /* Header Styles */
 .site-header {
     background: #FFFFFF;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     position: sticky;
     top: 0;
     z-index: 1000;
-    padding: 15px 0;
+    padding: 20px 0;
+    border-bottom: none;
 }
 
 .header-container {
@@ -124,7 +125,8 @@
 
 .primary-menu > li > a:hover,
 .primary-menu > li.current-menu-item > a {
-    color: var(--base-accent-orange, #F39A3B);
+    color: #f59e0b;
+    text-decoration: none;
 }
 
 /* Dropdown Menus */
