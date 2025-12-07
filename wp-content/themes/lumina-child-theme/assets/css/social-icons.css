@@ -1,0 +1,146 @@
+/**
+ * Social Media Icons Styling
+ * Professional icons for footer social links
+ */
+
+/* Social Links Container */
+.footer-social {
+    margin-top: 25px;
+}
+
+.footer-social h4 {
+    font-size: 16px;
+    margin-bottom: 15px;
+    color: #FFFFFF;
+}
+
+.social-links {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+/* Social Icon Base Styles */
+.social-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    color: #FFFFFF !important;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.social-icon svg {
+    width: 20px;
+    height: 20px;
+    position: relative;
+    z-index: 2;
+    transition: transform 0.3s ease;
+}
+
+/* Hover Effect */
+.social-icon:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.social-icon:hover svg {
+    transform: scale(1.1);
+}
+
+/* Facebook */
+.social-icon.facebook {
+    background: #1877F2;
+}
+
+.social-icon.facebook:hover {
+    background: #145dbf;
+    box-shadow: 0 5px 15px rgba(24, 119, 242, 0.4);
+}
+
+/* Twitter/X */
+.social-icon.twitter {
+    background: #1DA1F2;
+}
+
+.social-icon.twitter:hover {
+    background: #0d8bd9;
+    box-shadow: 0 5px 15px rgba(29, 161, 242, 0.4);
+}
+
+/* Instagram */
+.social-icon.instagram {
+    background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+}
+
+.social-icon.instagram:hover {
+    background: linear-gradient(45deg, #d67d2a 0%, #c95a30 25%, #b91f36 50%, #a91d56 75%, #9a1570 100%);
+    box-shadow: 0 5px 15px rgba(225, 48, 108, 0.4);
+}
+
+/* LinkedIn */
+.social-icon.linkedin {
+    background: #0A66C2;
+}
+
+.social-icon.linkedin:hover {
+    background: #084d92;
+    box-shadow: 0 5px 15px rgba(10, 102, 194, 0.4);
+}
+
+/* YouTube */
+.social-icon.youtube {
+    background: #FF0000;
+}
+
+.social-icon.youtube:hover {
+    background: #cc0000;
+    box-shadow: 0 5px 15px rgba(255, 0, 0, 0.4);
+}
+
+/* Pulse Animation on Hover */
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(255, 255, 255, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+    }
+}
+
+.social-icon:active {
+    animation: pulse 0.5s;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .social-links {
+        gap: 10px;
+    }
+    
+    .social-icon {
+        width: 36px;
+        height: 36px;
+        font-size: 16px;
+    }
+}
+
+/* Accessibility */
+.social-icon:focus {
+    outline: 2px solid #FFFFFF;
+    outline-offset: 2px;
+}
+
+/* Loading State */
+.social-icon.loading {
+    pointer-events: none;
+    opacity: 0.6;
+}

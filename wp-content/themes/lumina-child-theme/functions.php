@@ -26,6 +26,14 @@ function lumina_child_enqueue_styles() {
         null
     );
     
+    // Enqueue Font Awesome for social media icons
+    wp_enqueue_style(
+        'font-awesome',
+        'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css',
+        array(),
+        '6.4.0'
+    );
+    
     // Enqueue parent theme stylesheet
     wp_enqueue_style($parent_style, get_template_directory_uri() . '/style.css');
     
@@ -67,6 +75,14 @@ function lumina_child_enqueue_styles() {
         get_stylesheet_directory_uri() . '/assets/css/homepage-enhanced.css',
         array('lumina-brand-colors'),
         '2.0'
+    );
+    
+    // Social media icons CSS
+    wp_enqueue_style(
+        'lumina-social-icons',
+        get_stylesheet_directory_uri() . '/assets/css/social-icons.css',
+        array('font-awesome'),
+        '1.0.0'
     );
     
     // Enqueue child theme stylesheet
