@@ -4,9 +4,21 @@
         <div class="footer-content">
             <div class="footer-column">
                 <h3>Lumina International School</h3>
-                <p>Nurturing Young Minds with Islamic Values</p>
-                <p>Email: info@luminaschool.edu<br>
-                Phone: (123) 456-7890</p>
+                <p>Nurturing Young Minds with Islamic Values and Academic Excellence</p>
+                <p><strong>📧 Email:</strong> info@luminaschool.edu<br>
+                <strong>📞 Phone:</strong> (123) 456-7890<br>
+                <strong>📍 Address:</strong> 123 Education Street, City</p>
+                
+                <div class="footer-social">
+                    <h4>Connect With Us</h4>
+                    <div class="social-links">
+                        <a href="#" aria-label="Facebook" title="Facebook">📘</a>
+                        <a href="#" aria-label="Twitter" title="Twitter">🐦</a>
+                        <a href="#" aria-label="Instagram" title="Instagram">📷</a>
+                        <a href="#" aria-label="LinkedIn" title="LinkedIn">💼</a>
+                        <a href="#" aria-label="YouTube" title="YouTube">📺</a>
+                    </div>
+                </div>
             </div>
             
             <div class="footer-column">
@@ -20,88 +32,28 @@
                 ) );
                 ?>
             </div>
+            
+            <div class="footer-column">
+                <h4>Important Links</h4>
+                <nav>
+                    <ul class="footer-menu">
+                        <li><a href="/admissions">Admissions</a></li>
+                        <li><a href="/programs">Programs</a></li>
+                        <li><a href="/events">Events</a></li>
+                        <li><a href="/contact">Contact Us</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                    </ul>
+                </nav>
+            </div>
         </div>
         
         <div class="footer-bottom">
-            <p>&copy; <?php echo date('Y'); ?> Lumina International School. All rights reserved.</p>
+            <p>&copy; <?php echo date('Y'); ?> Lumina International School. All rights reserved. | Designed with ❤️ for Education</p>
         </div>
     </div>
 </footer>
 
 <?php wp_footer(); ?>
-
-<style>
-/* Footer Styles */
-.site-footer {
-    background: var(--base-darkblue, #003d70);
-    color: #FFFFFF;
-    padding: 40px 0 20px;
-    margin-top: 60px;
-}
-
-.footer-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
-}
-
-.footer-content {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 40px;
-    margin-bottom: 30px;
-}
-
-.footer-column h3,
-.footer-column h4 {
-    color: #FFFFFF;
-    margin-bottom: 15px;
-}
-
-.footer-column p {
-    color: #FFFFFF;
-    line-height: 1.6;
-    margin: 10px 0;
-}
-
-.footer-menu {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.footer-menu li {
-    margin: 8px 0;
-}
-
-.footer-menu a {
-    color: #FFFFFF;
-    text-decoration: none;
-    transition: color 0.3s ease;
-}
-
-.footer-menu a:hover {
-    color: var(--base-accent-teal, #7EBEC5);
-}
-
-.footer-bottom {
-    border-top: 1px solid rgba(255, 255, 255, 0.2);
-    padding-top: 20px;
-    text-align: center;
-}
-
-.footer-bottom p {
-    margin: 0;
-    color: #FFFFFF;
-}
-
-@media (max-width: 768px) {
-    .footer-content {
-        grid-template-columns: 1fr;
-        gap: 30px;
-    }
-}
-</style>
 
 </body>
 </html>

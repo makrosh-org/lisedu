@@ -21,7 +21,7 @@ function lumina_child_enqueue_styles() {
     // Enqueue Google Fonts - Poppins for modern look
     wp_enqueue_style(
         'lumina-google-fonts',
-        'https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap',
+        'https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap',
         array(),
         null
     );
@@ -59,6 +59,14 @@ function lumina_child_enqueue_styles() {
         get_stylesheet_directory_uri() . '/assets/css/admission-form.css',
         array($parent_style, 'lumina-brand-colors'),
         '1.0.0'
+    );
+    
+    // Enhanced homepage styles
+    wp_enqueue_style(
+        'lumina-homepage-enhanced',
+        get_stylesheet_directory_uri() . '/assets/css/homepage-enhanced.css',
+        array('lumina-brand-colors'),
+        '2.0'
     );
     
     // Enqueue child theme stylesheet
