@@ -55,14 +55,17 @@
     position: sticky;
     top: 0;
     z-index: 1000;
-    padding: 20px 0;
+    padding: 0;
     border-bottom: none;
+    width: 100%;
+    max-width: 100%;
 }
 
 .header-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
+    max-width: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 20px 40px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -179,8 +182,14 @@
 /* Mobile Styles */
 @media (max-width: 768px) {
     .header-container {
-        flex-wrap: wrap;
-    }
+    max-width: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 20px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
     
     .site-branding {
         flex: 1;

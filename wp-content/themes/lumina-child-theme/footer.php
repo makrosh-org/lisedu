@@ -7,7 +7,8 @@
                 <p>Nurturing Young Minds with Islamic Values and Academic Excellence</p>
                 <p><strong>📧 Email:</strong> info@luminaschool.edu<br>
                 <strong>📞 Phone:</strong> (123) 456-7890<br>
-                <strong>📍 Address:</strong> 123 Education Street, City</p>
+                <strong>📍 Address:</strong> 26/11 Rajabari, Savar Upazila Complex, Genda, Savar, Dhaka-1340<br>
+                Opposite of Dhaka Palli Bidyut Samity-3</p>
                 
                 <div class="footer-social">
                     <h4>Connect With Us</h4>

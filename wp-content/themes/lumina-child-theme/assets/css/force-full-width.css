@@ -1,0 +1,107 @@
+
+/* ============================================
+   AGGRESSIVE FULL WIDTH HEADER AND FOOTER
+   ============================================ */
+
+/* Remove body padding/margin */
+body {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* Remove all wrapper constraints */
+#page,
+#content,
+.site,
+.site-content,
+.ast-container,
+.container,
+.wrap,
+.wrapper {
+    max-width: none !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+
+/* Force header to full width */
+.site-header,
+header.site-header,
+.ast-header,
+#masthead {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    position: relative !important;
+    left: 50% !important;
+    right: 50% !important;
+    margin-left: -50vw !important;
+    margin-right: -50vw !important;
+}
+
+/* Header container with padding */
+.header-container,
+.site-header .ast-container,
+.site-header .container {
+    max-width: 100% !important;
+    width: 100% !important;
+    padding: 20px 40px !important;
+    margin: 0 auto !important;
+}
+
+/* Force footer to full width */
+.site-footer,
+footer.site-footer,
+.ast-footer,
+#colophon {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    position: relative !important;
+    left: 50% !important;
+    right: 50% !important;
+    margin-left: -50vw !important;
+    margin-right: -50vw !important;
+}
+
+/* Footer container with padding */
+.footer-container,
+.site-footer .ast-container,
+.site-footer .container {
+    max-width: 100% !important;
+    width: 100% !important;
+    padding: 60px 40px 20px !important;
+    margin: 0 auto !important;
+}
+
+/* Ensure content area doesn't interfere */
+.site-content,
+#content,
+.ast-content {
+    overflow-x: hidden !important;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+    .header-container,
+    .footer-container,
+    .site-header .ast-container,
+    .site-footer .ast-container {
+        padding-left: 20px !important;
+        padding-right: 20px !important;
+    }
+}
+
+/* Override any Astra theme constraints */
+.ast-separate-container .site-header,
+.ast-separate-container .site-footer {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+
+.ast-separate-container .ast-article-single,
+.ast-separate-container .ast-article-post {
+    max-width: 1200px !important;
+    margin: 0 auto !important;
+}

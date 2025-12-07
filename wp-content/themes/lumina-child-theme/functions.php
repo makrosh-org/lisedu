@@ -70,6 +70,14 @@ function lumina_child_enqueue_styles() {
     );
     
     // Enqueue child theme stylesheet
+        // Fix underlines
+    wp_enqueue_style(
+        'lumina-underline-fixes',
+        get_stylesheet_directory_uri() . '/assets/css/underline-fixes.css',
+        array('lumina-homepage-enhanced'),
+        '1.0.0'
+    );
+    
     wp_enqueue_style(
         'lumina-child-style',
         get_stylesheet_directory_uri() . '/style.css',
@@ -3248,3 +3256,17 @@ function lumina_gallery_shortcode($atts) {
     return ob_get_clean();
 }
 add_shortcode('lumina_gallery', 'lumina_gallery_shortcode');
+
+
+/**
+ * Force full width header and footer
+ */
+function lumina_force_full_width() {
+    wp_enqueue_style(
+        'lumina-force-full-width',
+        get_stylesheet_directory_uri() . '/assets/css/force-full-width.css',
+        array(),
+        '1.0.0'
+    );
+}
+add_action('wp_enqueue_scripts', 'lumina_force_full_width', 999);
