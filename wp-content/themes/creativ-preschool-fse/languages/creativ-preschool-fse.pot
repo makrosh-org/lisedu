@@ -1,0 +1,287 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-07-13 15:58+0545\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: inc/theme-info.php:32
+msgid "Welcome to the"
+msgstr ""
+
+#: inc/theme-info.php:33
+msgid "is now installed and ready to use."
+msgstr ""
+
+#: inc/theme-info.php:36
+msgid "creativ-fse-pro"
+msgstr ""
+
+#: inc/theme-info.php:36
+msgid "Buy Pro"
+msgstr ""
+
+#: inc/theme-info.php:37
+msgid "Theme Info"
+msgstr ""
+
+#: inc/core/block-patterns.php:17
+msgid "Theme Patterns"
+msgstr ""
+
+#: inc/core/block-styles.php:25 inc/core/block-styles.php:33
+#: inc/core/block-styles.php:55 inc/core/block-styles.php:76
+msgid "Box Shadow"
+msgstr ""
+
+#: inc/core/block-styles.php:40 inc/core/block-styles.php:62
+#: inc/core/block-styles.php:83
+msgid "Box Shadow Medium"
+msgstr ""
+
+#: inc/core/block-styles.php:47 inc/core/block-styles.php:90
+msgid "Box Shadow Large"
+msgstr ""
+
+#: inc/core/block-styles.php:69
+msgid "Box Shadow Larger"
+msgstr ""
+
+#: inc/core/block-styles.php:97 inc/core/block-styles.php:104
+#: inc/core/block-styles.php:112 inc/core/block-styles.php:120
+msgid "Box Shadow on Hover"
+msgstr ""
+
+#: inc/core/block-styles.php:129
+msgid "Secondary"
+msgstr ""
+
+#: patterns/home-about.php:27
+msgid "About us"
+msgstr ""
+
+#: patterns/home-about.php:32
+msgid "We Are Making Every Childs World Better"
+msgstr ""
+
+#: patterns/home-about.php:36
+msgid ""
+"Our philosophy is learning through play as we offer a stimulating "
+"environment for children."
+msgstr ""
+
+#: patterns/home-about.php:43
+msgid ""
+"Our Preschool Program is designed so that the students spend their days "
+"participating in a structured, yet fun curriculum."
+msgstr ""
+
+#: patterns/home-about.php:51 patterns/home-hero.php:35
+#: patterns/home-services.php:35 patterns/home-services.php:61
+#: patterns/home-services.php:87 patterns/home-services.php:113
+msgid "Learn More"
+msgstr ""
+
+#: patterns/home-callback.php:18
+msgid "How to Enroll Your Child to Our Preschool?"
+msgstr ""
+
+#: patterns/home-callback.php:27
+msgid "Contact Us"
+msgstr ""
+
+#: patterns/home-classes.php:19
+msgid "Popular Classes"
+msgstr ""
+
+#: patterns/home-classes.php:24
+msgid "Devoted to the Early Education."
+msgstr ""
+
+#: patterns/home-classes.php:32
+msgid ""
+"Voluptatem per magnam ut assumenda magnis culpa orci, consectetuer, eaque, "
+"congue. Repudiandae ab ligula ante occaecat habitasse. Voluptas hic, aute."
+msgstr ""
+
+#: patterns/home-classes.php:52
+msgid "2 LESSONS"
+msgstr ""
+
+#: patterns/home-classes.php:62
+msgid "25 Students"
+msgstr ""
+
+#: patterns/home-classes.php:70
+msgid "Color Matching Class"
+msgstr ""
+
+#: patterns/home-classes.php:74
+msgid "The perfect class for your child with the best staff and best teachers."
+msgstr ""
+
+#: patterns/home-classes.php:78 patterns/home-classes.php:122
+#: patterns/home-classes.php:166
+msgid "GET STARTED"
+msgstr ""
+
+#: patterns/home-classes.php:96
+msgid "5 LESSONS"
+msgstr ""
+
+#: patterns/home-classes.php:106
+msgid "20 Students"
+msgstr ""
+
+#: patterns/home-classes.php:114
+msgid "Alphabet Matching Class"
+msgstr ""
+
+#: patterns/home-classes.php:118
+msgid ""
+"We provided 4 classes with 9 to 12 children earch aged 12 months to 5 years "
+"of age."
+msgstr ""
+
+#: patterns/home-classes.php:140
+msgid "3 LESSONS"
+msgstr ""
+
+#: patterns/home-classes.php:150
+msgid "35 Students"
+msgstr ""
+
+#: patterns/home-classes.php:158
+msgid "Letter Match Class"
+msgstr ""
+
+#: patterns/home-classes.php:162
+msgid "Our preschool program has four dedicated classes."
+msgstr ""
+
+#: patterns/home-classes.php:174 patterns/home-hero.php:31
+msgid "Enroll Now"
+msgstr ""
+
+#: patterns/home-classes.php:178
+msgid "More Classes"
+msgstr ""
+
+#: patterns/home-hero.php:22
+msgid "Best Kindergarten For Your Kids"
+msgstr ""
+
+#: patterns/home-hero.php:26
+msgid ""
+"We believe in open communication and collaboration with parents, making you "
+"an integral part of your child’s educational journey."
+msgstr ""
+
+#: patterns/home-latest-posts.php:17
+msgid "Our Blog"
+msgstr ""
+
+#: patterns/home-latest-posts.php:22
+msgid "Latest News & Articles"
+msgstr ""
+
+#: patterns/home-latest-posts.php:53
+msgid "No results"
+msgstr ""
+
+#: patterns/home-services.php:26
+msgid "Great Teacher"
+msgstr ""
+
+#: patterns/home-services.php:30 patterns/home-services.php:56
+#: patterns/home-services.php:82 patterns/home-services.php:108
+msgid ""
+"Uniquely productivate real time collaboration idea-sharing after awesome "
+"quality vectors after."
+msgstr ""
+
+#: patterns/home-services.php:52
+msgid "Bus Service"
+msgstr ""
+
+#: patterns/home-services.php:78
+msgid "Sports Training"
+msgstr ""
+
+#: patterns/home-services.php:104
+msgid "Language Course"
+msgstr ""
+
+#: patterns/primary-sidebar.php:19
+msgid "ABOUT DIRECTOR"
+msgstr ""
+
+#: patterns/primary-sidebar.php:34
+msgid "William Wright"
+msgstr ""
+
+#: patterns/primary-sidebar.php:38
+msgid ""
+"Ultricies augue sem fermentum deleniti ac odio curabitur, dolore mus "
+"corporis nisl. Class alias lorem omnis numquam ipsum."
+msgstr ""
+
+#: patterns/primary-sidebar.php:59
+msgid "RECENT POSTS"
+msgstr ""
+
+#: patterns/primary-sidebar.php:95
+msgid "FOLLOW US ON"
+msgstr ""
+
+#: patterns/sidebar-shop.php:19
+msgid "PRODUCT CATEGORIES"
+msgstr ""
+
+#: patterns/sidebar-shop.php:41
+msgid "RECENT PRODUCTS"
+msgstr ""
+
+#: patterns/template-404.php:25
+msgid "This page could not be found. Maybe try a search?"
+msgstr ""
+
+#: patterns/template-cart.php:44 patterns/template-cart.php:107
+msgid "You may be interested in…"
+msgstr ""
+
+#: patterns/template-cart.php:163
+msgid "Your cart is currently empty!"
+msgstr ""
+
+#: patterns/template-cart.php:167
+msgid "Browse store"
+msgstr ""
+
+#: patterns/template-cart.php:175
+msgid "New in store"
+msgstr ""
+
+#: patterns/template-product-search-results.php:54
+msgid "No products were found matching your selection."
+msgstr ""
+
+#: patterns/template-search.php:54
+msgid "Sorry, but nothing matched your search terms. Try another search?"
+msgstr ""
+
+#: patterns/template-single-product.php:72
+msgid "Related products"
+msgstr ""

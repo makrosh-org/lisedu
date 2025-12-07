@@ -1,0 +1,73 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/theme.json",
+  "title": "Green",
+  "version": 2,
+  "settings": {
+    "color": {
+      "defaultPalette": false,
+      "defaultGradients": false,
+      "palette": [
+        {
+          "slug": "primary",
+          "color": "#6EB432",
+          "name": "Primary"
+        },
+        {
+          "slug": "secondary",
+          "color": "#156C69",
+          "name": "Secondary"
+        },
+        {
+          "slug": "highlight",
+          "color": "#7dc91d",
+          "name": "Highlight"
+        },
+        {
+          "slug": "accent",
+          "color": "#479900",
+          "name": "Accent"
+        },
+        {
+          "slug": "base",
+          "color": "#FFFFFE",
+          "name": "Base"
+        },
+        {
+          "slug": "alter",
+          "color": "#EFFEE7",
+          "name": "Alter"
+        },
+        {
+          "slug": "contrast",
+          "color": "#313131",
+          "name": "Contrast"
+        },
+        {
+          "slug": "heading",
+          "color": "#001F4F",
+          "name": "Heading"
+        },
+        {
+          "slug": "outline",
+          "color": "#D5D5D5",
+          "name": "Outline"
+        },
+        {
+          "slug": "pure-white",
+          "color": "#FFFFFF",
+          "name": "Pure White"
+        },
+        {
+          "slug": "pure-black",
+          "color": "#000000",
+          "name": "Pure Black"
+        },
+        {
+          "slug": "transparent",
+          "color": "transparent",
+          "name": "Transparent"
+        }
+      ]
+    }
+  }
+}
