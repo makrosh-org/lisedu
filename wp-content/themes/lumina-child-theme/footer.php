@@ -6,7 +6,7 @@
                 <h3>Lumina International School</h3>
                 <p>Nurturing Young Minds with Islamic Values and Academic Excellence</p>
                 <p><strong>📧 Email:</strong> info@luminaschool.edu<br>
-                <strong>📞 Phone:</strong> (123) 456-7890<br>
+                <strong>📞 Phone:</strong> +8801920012010<br>
                 <strong>📍 Address:</strong> 26/11 Rajabari, Savar Upazila Complex, Genda, Savar, Dhaka-1340<br>
                 Opposite of Dhaka Palli Bidyut Samity-3</p>
                 
