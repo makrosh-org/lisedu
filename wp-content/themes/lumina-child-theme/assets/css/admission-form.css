@@ -110,6 +110,31 @@
     min-height: 120px;
 }
 
+/* File Upload */
+.lumina-admission-form input[type="file"] {
+    padding: 10px;
+    border: 2px dashed #e0e0e0;
+    background-color: #fafafa;
+    cursor: pointer;
+}
+
+.lumina-admission-form input[type="file"]:hover {
+    border-color: var(--base-accent-teal);
+    background-color: rgba(126, 190, 197, 0.05);
+}
+
+.lumina-admission-form input[type="file"]:focus {
+    border-color: var(--base-accent-teal);
+    border-style: solid;
+}
+
+.lumina-admission-form .form-row small {
+    display: block;
+    margin-top: 5px;
+    color: #666;
+    font-size: 0.85rem;
+}
+
 /* CAPTCHA Row */
 .lumina-admission-form .captcha-row {
     margin: 30px 0;
@@ -216,12 +241,18 @@
     content: "";
 }
 
-.lumina-admission-form label:has(+ [class*="required"])::after,
-.lumina-admission-form label:has(+ input[required])::after,
-.lumina-admission-form label:has(+ select[required])::after,
-.lumina-admission-form label:has(+ textarea[required])::after {
+/* Show asterisk for required fields */
+.wpcf7-form-control-wrap .wpcf7-validates-as-required ~ label::after,
+.lumina-admission-form label:has(+ .wpcf7-validates-as-required)::after {
     content: " *";
     color: #d32f2f;
+}
+
+/* Fallback for browsers that don't support :has() */
+@supports not (selector(:has(*))) {
+    .lumina-admission-form label {
+        /* Asterisks will be added manually in form HTML */
+    }
 }
 
 /* Responsive Design */

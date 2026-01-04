@@ -1637,6 +1637,13 @@ register_activation_hook(__FILE__, 'lumina_flush_rewrite_rules_on_activation');
 require_once get_stylesheet_directory() . '/elementor-config.php';
 
 /**
+ * Include Admission Form Handler
+ */
+if (file_exists(get_stylesheet_directory() . '/inc/admission-form-handler.php')) {
+    require_once get_stylesheet_directory() . '/inc/admission-form-handler.php';
+}
+
+/**
  * Shortcode: Display programs grid with expandable sections
  * Requirements: 1.3 - Display detailed information for each grade level
  * Task 9: Build Programs page and populate grade levels
